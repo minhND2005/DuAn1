@@ -1,0 +1,19 @@
+﻿@model List<Fast_Food.Models.MonAn>
+
+<h2>Kết quả tìm kiếm</h2>
+
+@if (Model.Any())
+{
+    <ul class="list-group">
+        @foreach (var mon in Model)
+        {
+            <li class="list-group-item">
+                <strong>@mon.TenMon</strong> - Giá: @mon.Gia VNĐ
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Không tìm thấy món ăn nào.</p>
+}

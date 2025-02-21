@@ -1,0 +1,162 @@
+﻿@model Fast_Food.Models.NhanVien
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Thông Tin Khách Hàng";
+}
+
+<h1 class="text-center text-primary mb-4"> Thông Tin Khách Hàng</h1>
+<hr class="border-primary" />
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Mã Khách Hàng -->
+            <input type="hidden" asp-for="MaNhanVien" />
+
+            <!-- Tên Khách Hàng -->
+            <div class="form-group mb-4">
+                <label asp-for="TenNhanVien" class="control-label text-info">Tên Nhân Viên</label>
+                <input asp-for="TenNhanVien" class="form-control form-control-lg border-info" placeholder="Nhập tên Nhân Viên..." />
+                <span asp-validation-for="TenNhanVien" class="text-danger"></span>
+            </div>
+
+            <!-- Giới Tính -->
+            <div class="form-group mb-4">
+                <label asp-for="GioiTinh" class="control-label text-info">Giới Tính</label>
+                <select asp-for="GioiTinh" class="form-control form-control-lg border-info">
+                    <option value="true">Nam</option>
+                    <option value="false">Nữ</option>
+                </select>
+                <span asp-validation-for="GioiTinh" class="text-danger"></span>
+            </div>
+
+            <!-- CCCD-->
+            <div class="form-group mb-4">
+                <label asp-for="Cccd" class="control-label text-info">CCCD</label>
+                <input asp-for="Cccd" class="form-control form-control-lg border-info" placeholder="Nhập số CCCD..." />
+                <span asp-validation-for="Cccd" class="text-danger"></span>
+            </div>
+
+            <!-- Số Điện Thoại -->
+            <div class="form-group mb-4">
+                <label asp-for="SoDienThoai" class="control-label text-info">Số Điện Thoại</label>
+                <input asp-for="SoDienThoai" class="form-control form-control-lg border-info" placeholder="Nhập số điện thoại..." />
+                <span asp-validation-for="SoDienThoai" class="text-danger"></span>
+            </div>
+
+            <!-- Ngày Sinh -->
+            <div class="form-group mb-4">
+                <label asp-for="NgaySinh" class="control-label text-info">Ngày Sinh</label>
+                <input asp-for="NgaySinh" class="form-control form-control-lg border-info" type="date" />
+                <span asp-validation-for="NgaySinh" class="text-danger"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group mb-4">
+                <label asp-for="Email" class="control-label text-info">Email</label>
+                <input asp-for="Email" class="form-control form-control-lg border-info" placeholder="Nhập email..." />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Địa Chỉ -->
+            <div class="form-group mb-4">
+                <label asp-for="DiaChi" class="control-label text-info">Địa Chỉ</label>
+                <input asp-for="DiaChi" class="form-control form-control-lg border-info" placeholder="Nhập địa chỉ..." />
+                <span asp-validation-for="DiaChi" class="text-danger"></span>
+            </div>
+            <!-- Tuổi -->
+            <div class="form-group">
+                <label asp-for="Tuoi" class="control-label"></label>
+                <input asp-for="Tuoi" class="form-control" />
+                <span asp-validation-for="Tuoi" class="text-danger"></span>
+            </div>
+
+            <!-- Avatar -->
+            <div class="form-group mb-4 text-center">
+                <label class="control-label text-info d-block">Ảnh Đại Diện</label>
+
+                @if (!string.IsNullOrEmpty(Model.Avatar))
+                {
+                    <img src="@Model.Avatar" class="avatar-preview mb-3" alt="Avatar" />
+                }
+
+                <input type="file" name="AvatarFile" class="form-control form-control-lg border-info" />
+            </div>
+
+            <!-- Nút Lưu và Hủy -->
+            <div class="form-group mt-4 d-flex justify-content-between">
+                <input type="submit" value="Lưu Thay Đổi" class="btn btn-success btn-lg px-4" />
+                <a asp-action="Index" class="btn btn-secondary btn-lg px-4">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .avatar-preview {
+        width: 100px; /* Giảm kích thước */
+        height: 100px; /* Giữ tỷ lệ khung hình */
+        object-fit: cover; /* Cắt ảnh để vừa với kích thước */
+        border-radius: 50%; /* Làm tròn ảnh */
+        border: 2px solid #17a2b8; /* Viền màu xanh */
+    }
+
+    /* Tùy chỉnh màu sắc và kiểu dáng của form */
+    .form-control {
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .text-info {
+        font-weight: 600;
+        color: #17a2b8;
+    }
+
+    .row {
+        margin-top: 50px;
+    }
+
+    /* Các hiệu ứng hình ảnh và chuyển động */
+    .form-group input {
+        transition: all 0.3s ease-in-out;
+    }
+
+        .form-group input:focus {
+            transform: scale(1.05);
+        }
+</style>
+

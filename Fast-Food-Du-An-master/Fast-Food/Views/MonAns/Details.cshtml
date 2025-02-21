@@ -1,0 +1,160 @@
+﻿@model Fast_Food.Models.MonAn
+
+@{
+    ViewData["Title"] = "Chi Tiết Sản Phẩm";
+}
+@if (TempData["Error1"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error1"]
+    </div>
+}
+
+<div class="container product-details">
+    <div class="row">
+        <!-- Cột 1: Hình ảnh sản phẩm -->
+        <div class="col-md-5">
+            <div class="product-image">
+                <img id="mainImage" src="@Url.Content("~/" + Model.HinhAnh)" alt="@Model.TenMon">
+            </div>
+        </div>
+
+        <!-- Cột 2: Thông tin sản phẩm -->
+        <div class="col-md-7">
+            <h2 class="product-title">@Model.TenMon</h2>
+            <div class="product-rating">
+                <span>⭐ 4.6 | 82 đánh giá</span>
+            </div>
+            <div class="product-price">
+                <span class="current-price">@Model.Gia.ToString("N3") VNĐ</span>
+                <span class="old-price">@((Model.Gia * 1.2M).ToString("N3")) VNĐ</span>
+                <span class="discount">-20%</span>
+            </div>
+            <div class="product-description">
+                <p>@Model.ChiTietFood</p>
+            </div>
+
+            <div class="quantity">
+                <label for="quantity">Số lượng:</label>
+                <input type="number" id="quantity" name="soLuong" value="1" min="1" max="@Model.SoLuong" @(Model.SoLuong == 0 ? "disabled" : "") />
+            </div>
+
+            <div class="actions">
+                @if (Model.SoLuong > 0)
+                {
+                    <!-- Thêm vào giỏ hàng -->
+                    <form asp-controller="MonAns" asp-action="AddToCart" method="post" class="p-2">
+                        <input type="hidden" name="id" value="@Model.MaMon" />
+                        <input type="hidden" name="soLuong" id="quantityHidden" value="1" />
+                        <button class="btn btn-outline-danger">🛒 Thêm Vào Giỏ Hàng</button>
+                    </form>
+
+                    <!-- Mua ngay -->
+                    <form id="buyNowForm" asp-controller="MonAns" asp-action="BuyNow" method="post" class="p-2">
+                        <input type="hidden" name="id" value="@Model.MaMon" />
+                        <input type="hidden" name="soLuong" id="quantityHiddenBuyNow" value="1" />
+                        <button type="submit" class="btn btn-danger">🛍️ Mua Ngay</button>
+                    </form>
+                }
+                else
+                {
+                    <p class="text-danger"><strong>Sản phẩm đã hết hàng</strong></p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-3 p-2">
+        <p><strong>Số Lượng Còn:</strong> @(Model.SoLuong)</p>
+        <p>
+            <strong>Trạng thái:</strong> <span class="badge @(Model.SoLuong > 0 ? "bg-success" : "bg-danger")">
+                @(Model.SoLuong > 0 ? "Còn hàng" : "Hết hàng")
+            </span>
+        </p>
+    </div>
+    <div>
+        <a asp-controller="MonAns" asp-action="Index" asp-route-LoaiSanPham="@ViewData["LoaiSanPham"]" class="btn btn-secondary">⬅ Trở lại danh sách</a>
+    </div>
+</div>
+
+<script>
+    // Cập nhật giá trị của input hidden khi người dùng thay đổi số lượng
+    document.getElementById("quantity")?.addEventListener("input", function () {
+        document.getElementById("quantityHidden").value = this.value;
+        document.getElementById("quantityHiddenBuyNow").value = this.value;
+    });
+
+    // Đảm bảo giá trị cập nhật cho nút Mua Ngay
+    document.getElementById("buyNowForm")?.addEventListener("submit", function () {
+        document.getElementById("quantityHiddenBuyNow").value = document.getElementById("quantity").value;
+    });
+</script>
+
+<style>
+    .product-details {
+        padding: 30px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image img {
+        width: 100%;
+        border-radius: 8px;
+    }
+
+    .product-title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .product-rating {
+        color: #ff9800;
+        font-size: 16px;
+    }
+
+    .product-price {
+        margin: 10px 0;
+    }
+
+    .current-price {
+        font-size: 28px;
+        color: #ff0000;
+        font-weight: bold;
+    }
+
+    .old-price {
+        text-decoration: line-through;
+        margin-left: 10px;
+        color: #aaa;
+    }
+
+    .discount {
+        background: #ff5722;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 5px;
+        margin-left: 10px;
+        font-size: 14px;
+    }
+
+    .quantity {
+        margin: 15px 0;
+    }
+
+        .quantity input {
+            width: 60px;
+            text-align: center;
+        }
+
+    .actions button {
+        font-size: 18px;
+        padding: 10px 20px;
+        margin-right: 10px;
+        border-radius: 5px;
+    }
+
+    .btn-warning {
+        margin-right: 10px;
+    }
+</style>

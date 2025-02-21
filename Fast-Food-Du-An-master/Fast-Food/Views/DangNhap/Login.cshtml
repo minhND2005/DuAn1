@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Đăng Nhập";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg mt-5">
+                <div class="card-header text-center">
+                    <h2>Đăng nhập</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Hiển thị lỗi nếu có -->
+                    @if (!string.IsNullOrEmpty(ViewBag.loi as string))
+                    {
+                        <div class="alert alert-danger text-center">
+                            @ViewBag.loi
+                        </div>
+                    }
+
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group mt-3">
+                            <label for="tk">Tên Tài Khoản</label>
+                            <input type="text" id="tk" name="tk" required class="form-control" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="Password">Password</label>
+                            <div class="input-group">
+                                <input type="password" id="Password" name="mk" required class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-check mt-3">
+                            <input type="checkbox" id="togglePassword" class="form-check-input" />
+                            <label for="togglePassword" class="form-check-label">Hiển Thị Mật Khẩu</label>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a href="/DangNhap/DangKy" class="text-decoration-none">Chưa có tài khoản? Đăng ký ngay</a>
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button class="btn btn-primary" type="submit">Đăng nhập</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script -->
+@section Scripts {
+    <script>
+        document.getElementById('togglePassword').addEventListener('change', function () {
+            const passwordField = document.getElementById('Password');
+            if (this.checked) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+    </script>
+}

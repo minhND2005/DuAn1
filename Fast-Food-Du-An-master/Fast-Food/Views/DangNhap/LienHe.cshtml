@@ -1,0 +1,44 @@
+﻿@model ContactViewModel
+
+@{
+    ViewData["Title"] = "Liên Hệ";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+
+    @* Hiển thị thông báo nếu có *@
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Message"]
+        </div>
+    }
+
+    <form asp-action="LienHe" method="post">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="Name">Họ và tên</label>
+                <input type="text" class="form-control" id="Name" name="Name" asp-for="Name" placeholder="Nhập họ và tên" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="Email">Email</label>
+                <input type="email" class="form-control" id="Email" name="Email" asp-for="Email" placeholder="Nhập email của bạn" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="Message">Nội dung</label>
+            <textarea class="form-control" id="Message" name="Message" asp-for="Message" rows="4" placeholder="Nhập nội dung liên hệ"></textarea>
+            <span asp-validation-for="Message" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Gửi</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

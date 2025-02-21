@@ -1,0 +1,27 @@
+﻿@model List<Fast_Food.Models.KhachHang>
+
+<h2>👥 Danh sách Khách hàng</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên khách hàng</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kh in Model)
+        {
+            <tr>
+                <td>@kh.TenKhachHang</td>
+                <td>@kh.Email</td>
+                <td>@kh.SoDienThoai</td>
+                <td>
+                    <a href="@Url.Action("Edit", "KhachHangs", new { id = kh.MaKhachHang })" class="btn btn-warning">Sửa</a>
+                    <a href="@Url.Action("Delete", "KhachHangs", new { id = kh.MaKhachHang })" class="btn btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

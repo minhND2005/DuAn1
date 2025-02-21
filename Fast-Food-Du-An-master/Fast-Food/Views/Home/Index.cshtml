@@ -1,0 +1,212 @@
+﻿@model List<MonAn>
+
+@{
+    ViewData["Title"] = "Home";
+}
+<div class="sale-banner">
+    <!-- Carousel full width -->
+    <div id="carouselExampleIndicators" class="carousel slide carousel-fade custom-carousel" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/img/monan/Ảnh bìa Facebook Sale 8.8 Khuyến mãi Ấn tượng Hiện đại Đỏ cam (4).png" class="d-block w-100" alt="Quảng cáo 1">
+            </div>
+            <div class="carousel-item">
+                <img src="~/img/monan/077962f0-2d32-4681-8824-49007efae0d1.png" class="d-block w-100" alt="Quảng cáo 2">
+            </div>
+            <div class="carousel-item">
+                <img src="~/img/monan/0ecca55e-781d-430b-94de-a4e60db144d4.png" class="d-block w-100" alt="Quảng cáo 3">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <div class="banner-small">
+        <img src="~/img/monan/Ảnh bìa Facebook Sale 8.8 Khuyến mãi Ấn tượng Hiện đại Đỏ cam (2).png" alt="Khuyến mãi">
+        <img src="~/img/monan/Ảnh bìa Facebook Sale 8.8 Khuyến mãi Ấn tượng Hiện đại Đỏ cam (2).png" alt="Freeship">
+    </div>
+</div>
+
+<div class="sticky-header" id="stickyHeader">Danh Sách Món Ăn</div>
+
+<div class="container-fluid">
+    <div class="container">
+        <main role="main" class="col-md-12 px-4">
+            @foreach (var group in Model.GroupBy(m => m.LoaiSanPham))
+            {
+                string tenLoai = group.Key;
+                <h1 id="@tenLoai.Replace(" ", "").ToLower()">@tenLoai</h1>
+                <div class="row">
+                    @foreach (var item in group)
+                    {
+                        @Html.Partial("_ProductCard", item)
+                    }
+                </div>
+            }
+        </main>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var myCarousel = new bootstrap.Carousel(document.querySelector("#carouselExampleIndicators"), {
+            interval: 4000,
+            ride: "carousel",
+            wrap: true
+        });
+
+        const headers = document.querySelectorAll("h1");
+        const stickyHeader = document.getElementById("stickyHeader");
+
+        window.addEventListener("scroll", function () {
+            let currentHeader = "";
+            headers.forEach(header => {
+                const rect = header.getBoundingClientRect();
+                if (rect.top <= 10) {
+                    currentHeader = header.textContent;
+                }
+            });
+            if (currentHeader) {
+                stickyHeader.textContent = currentHeader;
+                stickyHeader.style.display = "block";
+            } else {
+                stickyHeader.style.display = "none";
+            }
+        });
+    });
+</script>
+
+<style>
+    .sticky-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 10px 20px;
+        font-size: 24px;
+        font-weight: bold;
+        border-bottom: 2px solid #ddd;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    h1 {
+        margin-top: 100px;
+    }
+
+/*     .card {
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        } */
+
+    .sale-banner {
+        width: 100vw;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    .custom-carousel {
+        width: 100%;
+        height: auto;
+    }
+
+    /* .carousel-inner img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        transition: transform 1s ease-in-out;
+    } */
+
+    .banner-small img {
+        width: 100%;
+        height: calc(50% - 0px);
+        object-fit: cover;
+    }
+
+    .custom-carousel {
+        flex: 6;
+        width: 60%;
+        height: 350px;
+        overflow: hidden;
+    }
+
+    .banner-small {
+        flex: 4;
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 350px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next,
+    .carousel-indicators {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+    .carousel:hover .carousel-control-prev,
+    .carousel:hover .carousel-control-next,
+    .carousel:hover .carousel-indicators {
+        opacity: 1;
+    }
+
+    .carousel-control-next:hover {
+        transform: scale(1.1);
+    }
+
+    h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #ff6600;
+        text-align: center;
+        margin: 40px 0;
+        padding: 10px;
+        border-bottom: 3px solid #ff6600;
+        display: inline-block;
+    }
+
+    .sticky-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ff6600;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 1.5rem;
+        font-weight: bold;
+        z-index: 999; /* Giảm xuống nếu menu có z-index cao hơn */
+    }
+
+    body {
+        padding-top: 80px; /* Điều chỉnh tăng lên nếu menu bị che */
+    }
+</style>

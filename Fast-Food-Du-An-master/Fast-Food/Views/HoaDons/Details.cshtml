@@ -1,0 +1,72 @@
+﻿@model Fast_Food.Models.HoaDon
+
+@{
+    ViewData["Title"] = "Chi Tiết Hóa Đơn";
+}
+
+<h1 class="text-center mb-4">Chi Tiết Hóa Đơn</h1>
+
+<!-- Thông tin hóa đơn -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="card-title">Thông Tin Hóa Đơn</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Thời Gian Đặt</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.ThoiGianDat)</dd>
+            <dt class="col-sm-3">Thời Gian Kết Thúc</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.ThoiGianKetThuc)</dd>
+            <dt class="col-sm-3">Trạng Thái Đơn Hàng</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.TrangThaiDonHang)</dd>
+            <dt class="col-sm-3">Trạng Thái Thanh Toán</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.TrangThaiThanhToan)</dd>
+            <dt class="col-sm-3">Số Điện Thoại Liên Hệ</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.SdtlienHe)</dd>
+            <dt class="col-sm-3">Địa Chỉ Giao Hàng</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.DiaChiGiaoHang)</dd>
+        </dl>
+    </div>
+</div>
+
+<!-- Thông tin khách hàng -->
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h4 class="card-title">Thông Tin Khách Hàng</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Mã Khách Hàng</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.MaKhachHangNavigation.TenKhachHang)</dd>
+        </dl>
+    </div>
+</div>
+<h4 class="mb-4">Chi Tiết Sản Phẩm Trong Hóa Đơn</h4>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th class="text-center">Tên Món Ăn</th>
+            <th class="text-center">Số Lượng</th>
+            <th class="text-center">Đơn Giá</th>
+            <th class="text-center">Tổng Tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ct in Model.ChiTietHoaDons)
+        {
+            <tr>
+                <td>@ct.MaMonNavigation.TenMon</td>
+                <td class="text-center">@ct.SoLuong</td>
+                <td class="text-center">@((ct.Gia.HasValue ? ct.Gia.Value.ToString("N3") : "N/A")) VNĐ</td>
+                <td class="text-center">
+                    @(((ct.SoLuong.HasValue ? ct.SoLuong.Value : 0) * (ct.Gia.HasValue ? ct.Gia.Value : 0)).ToString("N3")) VNĐ
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Các nút điều hướng -->
+<div class="d-flex justify-content-between mt-4">
+    <a asp-action="Index" class="btn btn-secondary">Quay Lại Danh Sách</a>
+</div>

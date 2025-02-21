@@ -1,0 +1,41 @@
+﻿@model Fast_Food.Models.ChiTietCombo
+
+@{
+    ViewData["Title"] = "Create Combo Detail";
+}
+
+<h4>Create Combo Detail</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Dropdown List for Combo (Món ăn loại Combo) -->
+            <div class="form-group">
+                <label asp-for="MaCombo" class="control-label">Select Combo</label>
+                <select asp-for="MaCombo" class="form-control" asp-items="@(ViewData["MaCombo"] as SelectList)"></select>
+                <span asp-validation-for="MaCombo" class="text-danger"></span>
+            </div>
+
+            <!-- Dropdown List for adding food to the combo -->
+            <div class="form-group">
+                <label asp-for="MaMon" class="control-label">Add Food to Combo</label>
+                <select asp-for="MaMon" class="form-control" asp-items="@(ViewData["MaMonItems"] as SelectList)"></select>
+                <span asp-validation-for="MaMon" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<a asp-action="Index">Back to List</a>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

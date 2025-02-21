@@ -1,0 +1,50 @@
+﻿@if (ViewBag.Message != null)
+{
+    <div class="alert alert-warning text-center">@ViewBag.Message</div>
+}
+
+<table class="table table-bordered text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>Mã Hóa Đơn</th>
+            <th>Khách Hàng</th>
+            <th>Thời Gian Đặt</th>
+            <th>Tổng Tiền</th>
+            <th>Trạng Thái</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MaHoaDon</td>
+                <td>@item.MaKhachHangNavigation.TenKhachHang</td>
+                <td>@item.ThoiGianDat</td>
+                <td>@item.TongTien.ToString("N3") VNĐ</td>
+                <td><span class="badge bg-warning text-dark">@item.TrangThaiDonHang</span></td>
+                <td>
+                    @if (item.TrangThaiDonHang == "Chờ xác nhận")
+                    {
+                        <form asp-action="XacNhan" method="post">
+                            <input type="hidden" name="id" value="@item.MaHoaDon" />
+                            <button type="submit" class="btn btn-success"
+                                    onclick="return confirm('Bạn có chắc muốn xác nhận đơn hàng này không?');">
+                                ✅ Xác nhận
+                            </button>
+
+                        </form>
+                        <form asp-action="HuyDonHang" method="post">
+                            <input type="hidden" name="id" value="@item.MaHoaDon" />
+                            <button type="submit" class="btn btn-danger"
+                                    onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
+                                ✖️Hủy Đơn
+                            </button>
+
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

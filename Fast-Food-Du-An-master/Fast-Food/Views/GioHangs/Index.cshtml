@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Fast_Food.Models.GioHang>
+
+@{
+    ViewData["Title"] = "Giỏ Hàng";
+}
+
+<h1>Giỏ Hàng</h1>
+
+@if (TempData["Error2"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error2"]
+    </div>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên Sản Phẩm</th>
+            <th>Hình Ảnh</th>
+            <th>Giá</th>
+            <th>Số Lượng</th>
+            <th>Ghi Chú</th>
+            <th>Mã Sản Phẩm</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MaGioHang" class="text-decoration-none">
+						@item.MaMonNavigation.TenMon
+                    </a>
+                </td>
+                <td>
+                    <img src="@item.MaMonNavigation.HinhAnh" alt="Hình ảnh" style="width: 100px; height: 100px;" />
+                </td>
+                <td>@String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} đ", item.Gia)</td>
+                <td>
+                    <form method="post" asp-action="CapNhatSoLuong">
+                        <input type="hidden" name="id" value="@item.MaGioHang" />
+                        <input type="number" name="soLuong" value="@item.SoLuong" min="1" class="form-control" style="width: 70px; display: inline-block;" />
+                        <button type="submit" class="btn btn-success">Cập nhật</button>
+                    </form>
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.GhiChu)</td>
+                <td>
+                    @if (item.MaCombo != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.MaComboNavigation.MaMon) <!-- Hiển thị tên combo -->
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.MaMonNavigation.MaMon) <!-- Hiển thị tên món ăn -->
+                    }
+                </td>
+                <td>
+                    <form action="/GioHangs/Delete" method="post">
+                        <input type="hidden" name="id" value="@item.MaGioHang" />
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h4>
+    Tổng tiền:
+    <span class="text-danger">
+        @((ViewData["TotalPrice"] != null) ? ((decimal)ViewData["TotalPrice"]).ToString("N0", new System.Globalization.CultureInfo("vi-VN")) + " ₫" : "0 ₫")
+    </span>
+</h4>
+<form method="post" asp-action="MuaSanPham">
+    <button type="submit" class="btn btn-primary">Mua</button>
+</form>

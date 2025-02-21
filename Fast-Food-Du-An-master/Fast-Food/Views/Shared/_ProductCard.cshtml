@@ -1,0 +1,59 @@
+﻿@model MonAn
+
+<div class="col-md-4">
+    <a asp-action="Details" asp-controller="MonAns" asp-route-id="@Model.MaMon" class="product-link">
+        <div class="card mb-4 shadow-sm product-card">
+            <div class="product-img" style="background-image: url('@Url.Content(!string.IsNullOrEmpty(Model.HinhAnh) ? "~/" + Model.HinhAnh : "~/img/monan/default.png")');">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TenMon</h5>
+                <p class="card-text">Giá: @Model.Gia VNĐ</p>
+            </div>
+        </div>
+    </a>
+</div>
+
+<style>
+    /* Ẩn gạch chân khi click vào sản phẩm */
+    .product-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Style cho card món ăn */
+    .product-card {
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+    /* Ảnh full khung, không bị cắt */
+    .product-img {
+        width: 100%;
+        height: 300px; /* Điều chỉnh chiều cao ảnh */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: 10px 10px 0 0;
+    }
+
+    /* Căn giữa nội dung */
+    .card-body {
+        text-align: center;
+        padding: 15px;
+    }
+
+
+    .card-text {
+        font-size: 1rem;
+        color: #ff6600;
+        font-weight: bold;
+    }
+</style>

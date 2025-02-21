@@ -1,0 +1,61 @@
+﻿@model Fast_Food.Models.MonAn
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="text-center">Xóa</h1>
+
+<h3 class="text-center text-danger">Bạn có chắc chắn muốn xóa mục này không??</h3>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h5 class="card-title mb-0">MonAn Details</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">LoaiSanPham</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.LoaiSanPham)</dd>
+
+                <dt class="col-sm-3">TenMon</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.TenMon)</dd>
+
+                <dt class="col-sm-3">Gia</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Gia)</dd>
+
+                <dt class="col-sm-3">SoLuong</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.SoLuong)</dd>
+
+                <dt class="col-sm-3">TrangThai</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.TrangThai)</dd>
+
+                <dt class="col-sm-3">NgayTao</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NgayTao)</dd>
+
+                <dt class="col-sm-3">NgayCapNhat</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NgayCapNhat)</dd>
+
+                <dt class="col-sm-3">ChiTietFood</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.ChiTietFood)</dd>
+
+                <dt class="col-sm-3">HinhAnh</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.HinhAnh)</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            <form asp-action="Delete" class="d-inline">
+                <input type="hidden" asp-for="MaMon" />
+                <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+            </form>
+            <a asp-action="QuanLySanPham" class="btn btn-secondary btn-lg">Back to List</a>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

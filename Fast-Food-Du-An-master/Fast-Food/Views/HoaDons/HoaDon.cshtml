@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Fast_Food.Models.HoaDon>
+
+@{
+    ViewData["Title"] = "Quản lý hóa đơn";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+}
+
+<div class="text-center mb-4">
+    <h2 class="fw-bold text-primary">📜 Quản lý hóa đơn</h2>
+</div>
+<div class="filter-buttons mb-3">
+    <a class="btn btn-primary" href="@Url.Action("HoaDon", "HoaDons", new { status = "" })">Tất cả</a>
+    <a class="btn btn-secondary" href="@Url.Action("HoaDon", "HoaDons", new { status = "Canceled" })">Đã hủy</a>
+    <a class="btn btn-warning" href="@Url.Action("HoaDon", "HoaDons", new { status = "Preparing" })">Đang chuẩn bị</a>
+    <a class="btn btn-info" href="@Url.Action("HoaDon", "HoaDons", new { status = "Shipping" })">Đang giao hàng</a>
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered text-center align-middle shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Mã HĐ</th>
+                <th>Khách Hàng</th>
+                <th>Chi Tiết Hóa Đơn</th>
+                <th>Thời Gian Đặt</th>
+                <th>Thời Gian Kết Thúc</th>
+                <th>Trạng Thái</th>
+                <th>Tổng Tiền</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Where(h => h.TrangThaiDonHang != "Chờ xác nhận"))
+            {
+                <tr>
+                    <td><strong>@item.MaHoaDon</strong></td>
+                    <td>
+                        <a asp-action="Details" asp-controller="KhachHangs" asp-route-id="@item.MaKhachHang" class="text-decoration-none">
+                            @item.MaKhachHangNavigation.TenKhachHang
+                        </a>
+                    </td>
+
+                    <!-- Chi Tiết Hóa Đơn -->
+                    <td>
+                        <a asp-action="Details" asp-controller="HoaDons" asp-route-id="@item.MaHoaDon" class="text-decoration-none">
+                            Chi Tiết Hóa Đơn
+                        </a>
+                    </td>
+
+                    <td>@item.ThoiGianDat.ToString("dd/MM/yyyy HH:mm")</td>
+
+                    <!-- Thời Gian Kết Thúc -->
+                    <td>
+                        @if (item.ThoiGianKetThuc.HasValue)
+                        {
+                            @item.ThoiGianKetThuc.Value.ToString("dd/MM/yyyy HH:mm")
+                        }
+                        else
+                        {
+                            <span class="text-muted">Chưa kết thúc</span>
+                        }
+                    </td>
+
+                    <!-- Hiển thị trạng thái với màu sắc -->
+                    <td>
+                        <span class="badge
+                            @(item.TrangThaiDonHang == "Chờ xác nhận thanh toán" ? "bg-warning" :
+                              item.TrangThaiDonHang == "Đang chuẩn bị" ? "bg-warning" :
+                              item.TrangThaiDonHang == "Đã giao hàng" ? "bg-success" : "bg-secondary")">
+                            @item.TrangThaiDonHang
+                        </span>
+                    </td>
+
+                    <!-- Tổng Tiền -->
+                    <td class="fw-bold text-danger">@($"{item.TongTien:N3}") VNĐ</td>
+
+                    <!-- Cập nhật trạng thái -->
+                    <td>
+                        <form asp-action="CapNhatTrangThai" method="post">
+                            <input type="hidden" name="id" value="@item.MaHoaDon" />
+                            <button type="submit" class="btn btn-warning">
+                                🔄 Cập nhật trạng thái
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

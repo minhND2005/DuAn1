@@ -1,0 +1,20 @@
+﻿@model List<Fast_Food.Models.ThongKeViewModel>
+
+<h2 class="text-center">📊 Thống kê đơn hàng</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Trạng thái</th>
+            <th>Tổng tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TrangThai</td>
+                <td>@item.TongTien.GetValueOrDefault().ToString("N3") VND</td>
+            </tr>
+        }
+    </tbody>
+</table>

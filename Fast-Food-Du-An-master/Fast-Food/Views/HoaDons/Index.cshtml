@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Fast_Food.Models.HoaDon>
+
+@{
+    ViewData["Title"] = "Danh sách Hóa Đơn";
+}
+
+<h2 class="mb-4 text-center">Danh sách Hóa Đơn</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<table class="table table-bordered table-striped text-center align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>STT</th>
+            <th>Món Ăn Đặt</th>
+            <th>Thời Gian Đặt</th>
+            <th>Thời Gian Kết Thúc</th>
+            <th>Trạng Thái Đơn Hàng</th>
+            <th>Trạng Thái Thanh Toán</th>
+            <th>Số Điện Thoại</th>
+            <th>Địa Chỉ Giao Hàng</th>
+            <th>Tổng Tiền</th>
+            <th>Thao Tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Select((value, idx) => new { value, idx }))
+        {
+            <tr>
+                <td>@(item.idx + 1)</td> <!-- Số thứ tự -->
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.value.MaHoaDon" class="btn btn-info btn-sm">
+                        📜 Xem Chi Tiết
+                    </a>
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.value.ThoiGianDat)</td>
+                <td>@Html.DisplayFor(modelItem => item.value.ThoiGianKetThuc)</td>
+                <td>
+                    <span class="badge @(item.value.TrangThaiDonHang == "Đã hủy" ? "bg-danger" :
+                                        item.value.TrangThaiDonHang == "Hoàn thành" ? "bg-success" : "bg-warning text-dark")">
+                        @Html.DisplayFor(modelItem => item.value.TrangThaiDonHang)
+                    </span>
+                </td>
+                <td>
+                    <span class="badge @(item.value.TrangThaiThanhToan == "Đã thanh toán" ? "bg-success" : "bg-secondary")">
+                        @Html.DisplayFor(modelItem => item.value.TrangThaiThanhToan)
+                    </span>
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.value.SdtlienHe)</td>
+                <td>@Html.DisplayFor(modelItem => item.value.DiaChiGiaoHang)</td>
+                <td><strong>@Html.DisplayFor(modelItem => item.value.TongTien)₫</strong></td>
+                <td>
+                    @if (item.value.TrangThaiDonHang == "Chờ xác nhận" || item.value.TrangThaiDonHang == "Đang xử lý")
+                    {
+                        <form asp-action="CancelOrder" asp-controller="HoaDons" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.value.MaHoaDon" />
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
+                                🛑 Hủy Đơn
+                            </button>
+                        </form>
+                    }
+
+                    @if (item.value.TrangThaiDonHang == "Chờ xác nhận thanh toán")
+                    {
+                        <form asp-action="ThanhToan" asp-controller="HoaDons" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.value.MaHoaDon" />
+                            <button type="submit" class="btn btn-success btn-sm">
+                                💰 Thanh toán
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

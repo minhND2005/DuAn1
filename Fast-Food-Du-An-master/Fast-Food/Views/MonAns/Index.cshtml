@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Fast_Food.Models.MonAn>
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            @Html.Partial("_ProductCard", item)
+        }
+    </div>
+</div>
+
+<!-- Phân trang -->
+<nav aria-label="Page navigation example" class="d-flex justify-content-center mt-4">
+    <ul class="pagination">
+        <!-- Nút Previous -->
+        <li class="page-item @(ViewBag.Pager.CurrentPage == 1 ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-pg="@(ViewBag.Pager.CurrentPage - 1)"
+               asp-route-loaisanpham="@ViewBag.LoaiSanPham"
+               asp-route-timkiem="@ViewBag.TimKiem"><i class="fas fa-chevron-left"></i></a>
+        </li>
+
+        <!-- Các trang -->
+        @for (int i = ViewBag.Pager.StartPage; i <= ViewBag.Pager.EndPage; i++)
+        {
+            <li class="page-item @(i == ViewBag.Pager.CurrentPage ? "active" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-pg="@i"
+                   asp-route-loaisanpham="@ViewBag.LoaiSanPham"
+                   asp-route-timkiem="@ViewBag.TimKiem">@i</a>
+            </li>
+        }
+
+        <!-- Nút Next -->
+        <li class="page-item @(ViewBag.Pager.CurrentPage == ViewBag.Pager.TotalPages ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-pg="@(ViewBag.Pager.CurrentPage + 1)"
+               asp-route-loaisanpham="@ViewBag.LoaiSanPham"
+               asp-route-timkiem="@ViewBag.TimKiem"><i class="fas fa-chevron-right"></i></a>
+        </li>
+    </ul>
+</nav>
+
