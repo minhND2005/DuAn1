@@ -17,16 +17,7 @@ namespace Fast_Food.Controllers
         {
             _context = context;
         }
-        public IActionResult HienThiQR(int id)
-        {
-            var hoaDon = _context.HoaDons.Find(id);
-            if (hoaDon == null)
-            {
-                return NotFound();
-            }
-
-            return View(hoaDon); // Trả về View hiển thị ảnh QR
-        }
+       
 
         [HttpPost]
         public IActionResult ThanhToan(int id)
@@ -85,7 +76,8 @@ namespace Fast_Food.Controllers
                 {
                     // Cập nhật trạng thái hóa đơn
                     hoaDon.TrangThaiDonHang = "Đã hủy";
-
+                    hoaDon.TrangThaiThanhToan = "Đã hủy";
+                    hoaDon.ThoiGianKetThuc = DateTime.Now;
                     // Hoàn lại số lượng món ăn
                     foreach (var chiTiet in hoaDon.ChiTietHoaDons)
                     {
@@ -141,6 +133,12 @@ namespace Fast_Food.Controllers
                     case "Shipping":
                         hoaDons = hoaDons.Where(h => h.TrangThaiDonHang == "Đang giao hàng");
                         break;
+                    case "DaThanhToan":
+                        hoaDons = hoaDons.Where(h => h.TrangThaiDonHang == "Đã thanh toán");
+                        break;
+                    case "HoanThanh":
+                        hoaDons = hoaDons.Where(h => h.TrangThaiDonHang == "Hoàn thành");
+                        break;
                     default:
                         break;
                 }
@@ -158,21 +156,25 @@ namespace Fast_Food.Controllers
             var hoaDon = await _context.HoaDons.FindAsync(id);
             if (hoaDon == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Không tìm thấy hóa đơn!";
+                return RedirectToAction("HoaDon");
             }
 
             string trangThaiHienTai = hoaDon.TrangThaiDonHang.Trim().ToLower();
 
             switch (trangThaiHienTai)
             {
-                case "đang chuẩn bị":  // Chuyển từ "Đang chuẩn bị" sang "Đang giao hàng"
+                case "đang chuẩn bị":
                     hoaDon.TrangThaiDonHang = "Đang giao hàng";
+                    hoaDon.TrangThaiThanhToan = "Đang xử lý";
                     break;
-                case "đang giao hàng":  // Chuyển từ "Đang giao hàng" sang "Chờ xác nhận thanh toán"
-                    hoaDon.TrangThaiDonHang = "Chờ xác nhận thanh toán";
+                case "đang giao hàng":
+                    hoaDon.TrangThaiDonHang = "Đã thanh toán";
+                    hoaDon.TrangThaiThanhToan = "Đã thanh toán";
                     break;
-                case "chờ xác nhận thanh toán":  // Chuyển từ "Chờ xác nhận thanh toán" sang "Hoàn thành"
+                case "đã thanh toán":
                     hoaDon.TrangThaiDonHang = "Hoàn thành";
+                    hoaDon.TrangThaiThanhToan = "Đã thanh toán";
                     hoaDon.ThoiGianKetThuc = DateTime.Now;
                     break;
                 case "hoàn thành":
@@ -183,11 +185,13 @@ namespace Fast_Food.Controllers
                     return RedirectToAction("HoaDon");
             }
 
-            await _context.SaveChangesAsync();  // Cập nhật vào cơ sở dữ liệu
+            _context.HoaDons.Update(hoaDon);
+            await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Cập nhật trạng thái đơn hàng thành công!";
-            return RedirectToAction("HoaDon");  // Quay lại trang danh sách hóa đơn
+            return RedirectToAction("HoaDon");
         }
+
 
         // GET: HoaDons/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -382,14 +386,12 @@ namespace Fast_Food.Controllers
         [HttpPost]
         public IActionResult HuyDonHang(int id)
         {
-            var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
-            var maNhanVien = HttpContext.Session.GetString("MaNhanVien");
-
-            // Nếu chưa đăng nhập, chuyển hướng về trang Login
-            if (string.IsNullOrEmpty(maKhachHang) && string.IsNullOrEmpty(maNhanVien))
+            var MaNhanVien = HttpContext.Session.GetString("MaNhanVien");
+            if (string.IsNullOrEmpty(MaNhanVien))
             {
                 return RedirectToAction("Login", "DangNhap");
             }
+
             var hoaDon = _context.HoaDons
                 .Include(h => h.ChiTietHoaDons)
                 .FirstOrDefault(h => h.MaHoaDon == id);
@@ -406,6 +408,8 @@ namespace Fast_Food.Controllers
                 {
                     // Cập nhật trạng thái hóa đơn
                     hoaDon.TrangThaiDonHang = "Đã hủy";
+                    hoaDon.TrangThaiThanhToan = "Đã hủy";
+                    hoaDon.ThoiGianKetThuc = DateTime.Now;
 
                     // Hoàn lại số lượng món ăn
                     foreach (var chiTiet in hoaDon.ChiTietHoaDons)
@@ -430,8 +434,8 @@ namespace Fast_Food.Controllers
                 }
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("XacNhanDon");
         }
-
+      
     }
 }

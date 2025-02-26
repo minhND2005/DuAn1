@@ -119,7 +119,7 @@ namespace Fast_Food.Controllers
                     MaMon = monAn.MaMon,
                     TenSanPham = monAn.TenMon,
                     SoLuong = soLuong,
-                    Gia = monAn.Gia * soLuong, // Tính giá tiền = giá gốc * số lượng
+                    Gia = monAn.Gia * soLuong, 
                     anh = monAn.HinhAnh,
                     GhiChu = monAn.TenMon
                 };
@@ -167,7 +167,7 @@ namespace Fast_Food.Controllers
                 MaKhachHang = khachHang.MaKhachHang,
                 ThoiGianDat = DateTime.Now,
                 TrangThaiDonHang = "Chờ xác nhận",
-                TrangThaiThanhToan = "Chưa thanh toán",
+                TrangThaiThanhToan = "Đang xử lý",
                 SdtlienHe = khachHang.SoDienThoai,
                 DiaChiGiaoHang = khachHang.DiaChi,
                 TongTien = monAn.Gia * soLuong,
@@ -392,11 +392,19 @@ namespace Fast_Food.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> QuanLySanPham()
+        public async Task<IActionResult> QuanLySanPham(string TimKiem)
         {
-            var danhSachMonAn = await _context.MonAns.ToListAsync();
-            return View(danhSachMonAn);
+            var monAns = _context.MonAns.AsQueryable();
+
+            // Nếu có tham số TimKiem, lọc theo Tên Món
+            if (!string.IsNullOrEmpty(TimKiem))
+            {
+                monAns = monAns.Where(m => m.TenMon.Contains(TimKiem));
+            }
+
+            return View(monAns.ToList());
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CapNhatSoLuong(int id, int soLuong)

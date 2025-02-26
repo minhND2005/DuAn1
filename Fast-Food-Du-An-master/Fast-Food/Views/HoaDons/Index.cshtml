@@ -53,7 +53,7 @@
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.value.SdtlienHe)</td>
                 <td>@Html.DisplayFor(modelItem => item.value.DiaChiGiaoHang)</td>
-                <td><strong>@Html.DisplayFor(modelItem => item.value.TongTien)₫</strong></td>
+                <td><strong>@($"{(item.value.TongTien + 30000):N0}")₫</strong></td>
                 <td>
                     @if (item.value.TrangThaiDonHang == "Chờ xác nhận" || item.value.TrangThaiDonHang == "Đang xử lý")
                     {
@@ -69,13 +69,7 @@
 
                     @if (item.value.TrangThaiDonHang == "Chờ xác nhận thanh toán")
                     {
-                        <form asp-action="ThanhToan" asp-controller="HoaDons" method="post" class="d-inline">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@item.value.MaHoaDon" />
-                            <button type="submit" class="btn btn-success btn-sm">
-                                💰 Thanh toán
-                            </button>
-                        </form>
+                      
                     }
                 </td>
             </tr>

@@ -2,6 +2,12 @@
 {
     <div class="alert alert-warning text-center">@ViewBag.Message</div>
 }
+@if (ViewData["SuccessMessage"] != null)
+{
+    <div class="alert alert-info">
+        @ViewData["SuccessMessage"]
+    </div>
+}
 
 <table class="table table-bordered text-center">
     <thead class="table-dark">
@@ -21,7 +27,8 @@
                 <td>@item.MaHoaDon</td>
                 <td>@item.MaKhachHangNavigation.TenKhachHang</td>
                 <td>@item.ThoiGianDat</td>
-                <td>@item.TongTien.ToString("N3") VNĐ</td>
+                <td>@($"{(item.TongTien + 30000):N0}") VNĐ</td>
+
                 <td><span class="badge bg-warning text-dark">@item.TrangThaiDonHang</span></td>
                 <td>
                     @if (item.TrangThaiDonHang == "Chờ xác nhận")

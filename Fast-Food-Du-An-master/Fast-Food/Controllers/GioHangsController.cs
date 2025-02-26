@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fast_Food.Models;
+using System.Security.Claims;
 
 namespace Fast_Food.Controllers
 {
@@ -91,7 +92,7 @@ namespace Fast_Food.Controllers
                 TongTien = tongTien,
                 SdtlienHe = khachHang.SoDienThoai,
                 DiaChiGiaoHang = khachHang.DiaChi,
-                TrangThaiThanhToan = "Chưa thanh toán"
+                TrangThaiThanhToan = "Đang xử lý"
             };
 
             _context.HoaDons.Add(hoaDon);
@@ -311,5 +312,8 @@ namespace Fast_Food.Controllers
         {
             return _context.GioHangs.Any(e => e.MaGioHang == id);
         }
+
+       
+        
     }
 }

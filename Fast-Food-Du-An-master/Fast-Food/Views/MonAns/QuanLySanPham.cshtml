@@ -5,6 +5,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Quản lý Sản phẩm";
 }
+<div class="search-bar">
+    <form asp-action="QuanLySanPham" asp-controller="MonAns" method="get" class="d-flex">
+        <input class="form-control me-2 search-input" type="search" name="TimKiem" placeholder="Tìm kiếm..." aria-label="Search"><button class="btn btn-outline-success d-flex align-items-center justify-content-center" style="width: 130px; gap: 5px;" type="submit">
+            <ion-icon name="search"></ion-icon> Tìm Kiếm
+        </button>
+    </form>
+</div>
 
 <h2 class="text-center mt-4">Quản lý Sản phẩm</h2>
 
@@ -29,7 +36,7 @@
             <tr>
                 <td>@item.TenMon</td>
                 <td>@item.LoaiSanPham</td>
-                <td>@item.Gia VNĐ</td>
+                <td>@item.Gia.ToString("N0") VNĐ</td>
                 <td>
                     <form asp-action="CapNhatSoLuong" asp-controller="MonAns" method="post" class="d-flex">
                         <input type="hidden" name="id" value="@item.MaMon" />

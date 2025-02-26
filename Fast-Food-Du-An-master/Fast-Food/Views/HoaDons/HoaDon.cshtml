@@ -22,6 +22,8 @@
     <a class="btn btn-secondary" href="@Url.Action("HoaDon", "HoaDons", new { status = "Canceled" })">Đã hủy</a>
     <a class="btn btn-warning" href="@Url.Action("HoaDon", "HoaDons", new { status = "Preparing" })">Đang chuẩn bị</a>
     <a class="btn btn-info" href="@Url.Action("HoaDon", "HoaDons", new { status = "Shipping" })">Đang giao hàng</a>
+    <a class="btn btn-danger" href="@Url.Action("HoaDon", "HoaDons", new { status = "DaThanhToan" })">Đã thanh toán</a>
+    <a class="btn btn-success" href="@Url.Action("HoaDon", "HoaDons", new { status = "HoanThanh" })">Hoàn thành</a>
 
 </div>
 
@@ -74,25 +76,42 @@
                     <!-- Hiển thị trạng thái với màu sắc -->
                     <td>
                         <span class="badge
-                            @(item.TrangThaiDonHang == "Chờ xác nhận thanh toán" ? "bg-warning" :
+                            @(item.TrangThaiDonHang == "Đã thanh toán" ? "bg-danger" :
                               item.TrangThaiDonHang == "Đang chuẩn bị" ? "bg-warning" :
-                              item.TrangThaiDonHang == "Đã giao hàng" ? "bg-success" : "bg-secondary")">
+                               item.TrangThaiDonHang == "Hoàn Thành" ? "bg-success" :
+                              item.TrangThaiDonHang == "Đang giao hàng" ? "bg-info" : "bg-secondary")">
                             @item.TrangThaiDonHang
                         </span>
                     </td>
 
                     <!-- Tổng Tiền -->
-                    <td class="fw-bold text-danger">@($"{item.TongTien:N3}") VNĐ</td>
+                    <td class="fw-bold text-danger">@($"{(item.TongTien + 30000):N0}") VNĐ</td>
 
-                    <!-- Cập nhật trạng thái -->
+
+                  
                     <td>
+                        @if (item.TrangThaiDonHang == "Chờ xác nhận" || item.TrangThaiDonHang == "Đang chuẩn bị" || item.TrangThaiDonHang == "Đã hủy" ||
+                       item.TrangThaiDonHang == "Đang giao hàng" || item.TrangThaiDonHang == "Đã thanh toán")
+                        {
                         <form asp-action="CapNhatTrangThai" method="post">
                             <input type="hidden" name="id" value="@item.MaHoaDon" />
                             <button type="submit" class="btn btn-warning">
                                 🔄 Cập nhật trạng thái
                             </button>
                         </form>
+                        }
+                        @if (item.TrangThaiDonHang == "Chờ xác nhận" || item.TrangThaiDonHang == "Đang chuẩn bị")
+                        {
+                            <form asp-action="HuyDonHang" method="post">
+                                <input type="hidden" name="id" value="@item.MaHoaDon" />
+                                <button type="submit" class="btn btn-primary">
+                                    Hủy đơn
+                                </button>
+                            </form>
+                        }
                     </td>
+
+
                 </tr>
             }
         </tbody>
