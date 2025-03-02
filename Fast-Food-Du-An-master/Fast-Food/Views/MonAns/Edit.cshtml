@@ -1,87 +1,118 @@
 ﻿@model Fast_Food.Models.MonAn
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh Sửa Món Ăn";
 }
 
-<h1>Sửa</h1>
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-warning text-white text-center py-3">
+            <h3 class="m-0">Chỉnh Sửa Món Ăn</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" class="row g-3" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="MaMon" />
+                <input type="hidden" asp-for="HinhAnh" /> <!-- Giữ đường dẫn ảnh cũ nếu không đổi -->
 
-<h4 class="text-center">MonAn</h4>
-<hr />
+                <div class="form-group">
+                    <label asp-for="LoaiSanPham" class="control-label"></label>
+                    <select asp-for="LoaiSanPham" class="form-control">
+                        <option value="0">---Lựa Chọn Món Ăn---</option>
+                        <option value="Gà">Gà</option>
+                        <option value="Kem">Kem</option>
+                        <option value="Burger">Burger</option>
+                        <option value="Pizza">Pizza</option>
+                        <option value="Khoai Tây">Khoai Tây</option>
+                        <option value="Đồ Uống">Đồ Uống</option>
+                        <option value="Combo">Combo</option>
+                    </select>
+                    <span asp-validation-for="LoaiSanPham" class="text-danger"></span>
+                </div>
 
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
-            <input type="hidden" asp-for="MaMon" />
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="TenMon" class="form-control" placeholder="Tên món ăn" />
+                        <label asp-for="TenMon"></label>
+                    </div>
+                    <span asp-validation-for="TenMon" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="LoaiSanPham" class="control-label"></label>
-                <input asp-for="LoaiSanPham" class="form-control" placeholder="Enter product type" />
-                <span asp-validation-for="LoaiSanPham" class="text-danger"></span>
-            </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="Gia" class="form-control" placeholder="Giá tiền" />
+                        <label asp-for="Gia"></label>
+                    </div>
+                    <span asp-validation-for="Gia" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="TenMon" class="control-label"></label>
-                <input asp-for="TenMon" class="form-control" placeholder="Enter product name" />
-                <span asp-validation-for="TenMon" class="text-danger"></span>
-            </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="SoLuong" class="form-control" placeholder="Số lượng" />
+                        <label asp-for="SoLuong"></label>
+                    </div>
+                    <span asp-validation-for="SoLuong" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Gia" class="control-label"></label>
-                <input asp-for="Gia" class="form-control" placeholder="Enter price" />
-                <span asp-validation-for="Gia" class="text-danger"></span>
-            </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select asp-for="TrangThai" class="form-select">
+                            <option value="true" selected="@(Model.TrangThai == true ? "selected" : null)">Còn hàng</option>
+                            <option value="false" selected="@(Model.TrangThai == false ? "selected" : null)">Hết hàng</option>
+                        </select>
+                        <label asp-for="TrangThai"></label>
+                    </div>
+                    <span asp-validation-for="TrangThai" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="SoLuong" class="control-label"></label>
-                <input asp-for="SoLuong" class="form-control" placeholder="Enter quantity" />
-                <span asp-validation-for="SoLuong" class="text-danger"></span>
-            </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="NgayTao" type="date" class="form-control" />
+                        <label asp-for="NgayTao"></label>
+                    </div>
+                    <span asp-validation-for="NgayTao" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="TrangThai" class="control-label"></label>
-                <input asp-for="TrangThai" class="form-control" placeholder="Enter status" />
-                <span asp-validation-for="TrangThai" class="text-danger"></span>
-            </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="NgayCapNhat" type="date" class="form-control" />
+                        <label asp-for="NgayCapNhat"></label>
+                    </div>
+                    <span asp-validation-for="NgayCapNhat" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="NgayTao" class="control-label"></label>
-                <input asp-for="NgayTao" class="form-control" type="date" />
-                <span asp-validation-for="NgayTao" class="text-danger"></span>
-            </div>
+                <div class="col-md-12">
+                    <div class="form-floating">
+                        <textarea asp-for="ChiTietFood" class="form-control" rows="3" placeholder="Mô tả món ăn"></textarea>
+                        <label asp-for="ChiTietFood"></label>
+                    </div>
+                    <span asp-validation-for="ChiTietFood" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HinhAnh" class="control-label">Chọn ảnh mới (nếu có)</label>
+                    <input type="file" name="file" class="form-control" accept="image/*" />
+                    <span asp-validation-for="HinhAnh" class="text-danger"></span>
 
-            <div class="form-group">
-                <label asp-for="NgayCapNhat" class="control-label"></label>
-                <input asp-for="NgayCapNhat" class="form-control" type="date" />
-                <span asp-validation-for="NgayCapNhat" class="text-danger"></span>
-            </div>
+                    <!-- Hiển thị ảnh cũ (nếu có) -->
+                    @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                    {
+                        <img src="~/@Model.HinhAnh" alt="Ảnh hiện tại" style="width: 200px; height: auto; margin-top: 10px;" />
+                    }
+                    <!-- Lưu lại giá trị ảnh cũ nếu không chọn ảnh mới -->
+                    <input type="hidden" name="HinhAnhCu" value="@Model.HinhAnh" />
+                </div>
 
-            <div class="form-group">
-                <label asp-for="ChiTietFood" class="control-label"></label>
-                <textarea asp-for="ChiTietFood" class="form-control" rows="3" placeholder="Enter food details"></textarea>
-                <span asp-validation-for="ChiTietFood" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="HinhAnh" class="control-label"></label>
-                <input asp-for="HinhAnh" class="form-control" placeholder="Enter image URL" />
-                <span asp-validation-for="HinhAnh" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
-            </div>
-        </form>
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-warning px-4">
+                        <i class="fas fa-save"></i> Lưu Thay Đổi
+                    </button>
+                    <a asp-action="QuanLySanPham" class="btn btn-secondary px-4 ms-2">
+                        <i class="fas fa-arrow-left"></i> Quay Lại
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="text-center mt-3">
-    <a asp-action="QuanLySanPham" class="btn btn-secondary">Back to List</a>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

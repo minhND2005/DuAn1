@@ -1,0 +1,209 @@
+﻿@model HoaDonViewModels
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<div class="search-bar">
+    <form asp-action="ThemHoaDonMoi" asp-controller="HoaDons" method="get" class="d-flex">
+        <input class="form-control me-2 search-input"
+               type="search"
+               name="TimKiem"
+               value="@ViewData["TimKiem"]"
+               placeholder="Tìm kiếm..."
+               aria-label="Search">
+
+        <button class="btn btn-outline-success d-flex align-items-center justify-content-center"
+                style="width: 130px; gap: 5px;"
+                type="submit">
+            <ion-icon name="search"></ion-icon> Tìm Kiếm
+        </button>
+    </form>
+</div>
+<form asp-controller="HoaDons" asp-action="ThemHoaDonMoi" method="post">
+    <div class="container">
+        <div class="row">
+            <!-- Bảng danh sách món ăn -->
+            <div class="col-md-8">
+                <h4>Danh Sách Món Ăn</h4>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Tên Món</th>
+                            <th>Giá</th>
+                            <th>Số Lượng</th>
+                            <th>Số Lượng Tồn</th> <!-- Hiển thị số lượng còn trong kho -->
+                            <th>Tổng Tiền</th>
+                        </tr>
+                        @for (int i = 0; i < Model.DanhSachMonAn.Count; i++)
+                        {
+                            var monAn = Model.DanhSachMonAn[i];
+                            <tr>
+                                <!-- Cột Tên Món -->
+                                <td>
+                                    @monAn.TenMon
+                                    <input type="hidden" name="ChiTietHoaDon[@i].MaMonAn" value="@monAn.MaMon" />
+                                    <input type="hidden" name="ChiTietHoaDon[@i].TenMonAn" value="@monAn.TenMon" />
+                                    <input type="hidden" name="ChiTietHoaDon[@i].Gia" value="@monAn.Gia" />
+                                </td>
+
+                                <!-- Cột Giá -->
+                                <td>@monAn.Gia.ToString("N0") VNĐ</td>
+
+                                <!-- Cột Số Lượng -->
+                                <td>
+                                    <input type="number" name="ChiTietHoaDon[@i].SoLuong" class="form-control slg"
+                                           value="0" min="0" max="@monAn.SoLuong"
+                                           data-price="@monAn.Gia" data-id="@monAn.MaMon"
+                                           oninput="updateTotal()" />
+                                </td>
+
+                                <!-- Cột Số Lượng Tồn -->
+                                <td>@monAn.SoLuong cái</td> <!-- Hiển thị số lượng tồn kho -->
+                                <!-- Cột Tổng Tiền -->
+                                <td><span class="tong-tien-mon">0 VNĐ</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Cột khách hàng + danh sách món đã chọn -->
+            <div class="col-md-4">
+                <!-- Chọn khách hàng -->
+                <div class="p-3 border rounded">
+                    <h4>Chọn Khách Hàng</h4>
+                    <select name="MaKhachHang" class="form-control" id="selectKhachHang" onchange="kiemTraKhachHang()">
+                        <option value="">Chọn khách hàng</option>
+                        @foreach (var khach in Model.DanhSachKhachHang)
+                        {
+                            <option value="@khach.MaKhachHang">@khach.TenKhachHang</option>
+                        }
+                    </select>
+
+                    <h4 class="mt-3">Tổng Tiền: <span id="tongTienHoaDon" class="text-success">0 VNĐ</span></h4>
+
+                    <!-- Nút Thanh Toán (Ban đầu bị vô hiệu hóa) -->
+                    <button type="submit" class="btn btn-success btn-block mt-3" id="btnThanhToan" disabled>
+                        Xác Nhận & Thanh Toán
+                    </button>
+                </div>
+
+                <!-- Danh sách món đã chọn -->
+                <div class="mt-4 p-3 border rounded">
+                    <h4>Danh Sách Món Ăn Đã Chọn</h4>
+                    <table class="table" id="dsMonDaChon">
+                        <thead>
+                            <tr>
+                                <th>Tên Món</th>
+                                <th>Giá</th>
+                                <th>Số Lượng</th>
+                                <th>Tổng Tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Chưa chọn món nào</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    @* Gán sự kiện khi thay đổi khách hàng *@
+        document.getElementById("selectKhachHang").addEventListener("change", kiemTraKhachHang);
+
+        // Gán sự kiện động khi thay đổi số lượng món ăn
+        document.addEventListener("input", function (event) {
+            if (event.target.classList.contains("slg")) {
+                updateTotal();
+            }
+        });
+
+    @* Hàm cập nhật tổng tiền và danh sách món đã chọn *@
+        function updateTotal() {
+            let total = 0;
+            let selectedItems = [];
+
+            document.querySelectorAll('.slg').forEach(input => {
+                let quantity = parseInt(input.value) || 0;
+                let maxQuantity = parseInt(input.max) || 0;
+                let price = parseFloat(input.dataset.price) || 0;
+                let row = input.closest('tr');
+                let tenMon = row.querySelector("td:first-child").innerText;
+                let totalPrice = quantity * price;
+
+    @* Kiểm tra nếu số lượng nhập vào lớn hơn tồn kho *@
+                if (quantity > maxQuantity) {
+                    input.value = maxQuantity; // Reset về số lượng tối đa có thể đặt
+                    quantity = maxQuantity;
+                    totalPrice = quantity * price;
+                }
+
+    @* Cập nhật tổng tiền từng món ăn *@
+                row.querySelector('.tong-tien-mon').innerText = totalPrice.toLocaleString() + " VNĐ";
+
+                if (quantity > 0) {
+                    total += totalPrice;
+                    selectedItems.push({
+                        tenMon: tenMon,
+                        gia: price,
+                        soLuong: quantity,
+                        tongTien: totalPrice
+                    });
+                }
+            });
+
+    @* // Hiển thị tổng tiền hóa đơn *@
+            document.getElementById("tongTienHoaDon").innerText = total.toLocaleString() + " VNĐ";
+
+            // Cập nhật danh sách món đã chọn
+            renderSelectedItems(selectedItems);
+
+    @* // Kiểm tra điều kiện thanh toán *@
+            kiemTraKhachHang();
+        }
+
+    @*  Hàm kiểm tra khách hàng và bật/tắt nút thanh toán *@
+        function kiemTraKhachHang() {
+            let khachHang = document.getElementById("selectKhachHang").value;
+            let tongTien = parseInt(document.getElementById("tongTienHoaDon").innerText.replace(/\D/g, "")) || 0;
+            let btnThanhToan = document.getElementById("btnThanhToan");
+
+            if (khachHang === "" || tongTien === 0) {
+                btnThanhToan.disabled = true;
+            } else {
+                btnThanhToan.disabled = false;
+            }
+        }
+
+    @* Hàm hiển thị danh sách món đã chọn *@
+        function renderSelectedItems(items) {
+            let tbody = document.querySelector("#dsMonDaChon tbody");
+            tbody.innerHTML = "";
+
+            if (items.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='4' class='text-center text-muted'>Chưa chọn món nào</td></tr>";
+                return;
+            }
+
+            let rows = items.map(item => `
+                <tr>
+                    <td>${item.tenMon}</td>
+                    <td>${item.gia.toLocaleString()} VNĐ</td>
+                    <td>${item.soLuong}</td>
+                    <td>${item.tongTien.toLocaleString()} VNĐ</td>
+                </tr>
+            `).join("");
+
+            tbody.insertAdjacentHTML("beforeend", rows);
+        }
+    });
+</script>
+

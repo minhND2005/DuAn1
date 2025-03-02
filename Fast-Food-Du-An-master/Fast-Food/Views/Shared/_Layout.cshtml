@@ -22,7 +22,8 @@
         }
 
         @if (!(controllerName == "DangNhap" && (actionName == "Login" || actionName == "Register" || actionName == "LienHe")
-        || (controllerName == "KhachHangs" && actionName == "Edit" && controllerName == "MonAns" && actionName == "QuanLySanPham" && id != null)))  // Thêm điều kiện hiển thị thanh tìm kiếm
+        || (controllerName == "KhachHangs" && actionName == "Edit" && controllerName == "MonAns" && actionName == "QuanLySanPham" && 
+        controllerName == "HoaDons" && actionName == "ThemHoaDonMoi" && id != null)))  // Thêm điều kiện hiển thị thanh tìm kiếm
         {
             <div class="search-bar">
                 <form asp-action="Index" asp-controller="MonAns" method="get" class="d-flex">
@@ -44,8 +45,6 @@
             <div class="account-icon-container">
                 <div class="account-dropdown d-flex align-items-center">
                     <div class="account-dropdown">
-                        <img src="@avatar" alt="Avatar" class="rounded-circle" width="40" height="40"
-                             onerror="this.onerror=null; this.src='/img/avatars/default-avatar.jpg';" />
                         <span class="ms-2">Xin chào, @tenKhachHang</span>
                     </div>
 
@@ -69,18 +68,10 @@
             <div class="account-icon-container">
                 <div class="account-dropdown d-flex align-items-center">
                     <div class="account-dropdown">
-                        <img src="@Url.Content(Context.Session.GetString("Avatar"))"
-                             alt="Avatar" class="rounded-circle" width="40" height="40"
-                             onerror="this.onerror=null; this.src='/img/avatars/default-avatar.jpg';" />
                         <span class="ms-2">Xin chào, @Context.Session.GetString("TenNhanVien")</span>
                     </div>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="@Url.Action("Edit", "NhanViens", new { id = maNhanVien })">Thông tin cá nhân</a></li>
-                        <li><a class="dropdown-item" href="@Url.Action("QuanLySanPham", "MonAns")">Quản lý Sản phẩm</a></li>
-                        <li><a class="dropdown-item" href="@Url.Action("DanhSachKhachHang", "KhachHangs")">Quản lý Khách hàng</a></li>
-                        <li><a class="dropdown-item" href="@Url.Action("ThongKe", "HoaDons")">Thống kê Đơn hàng</a></li>
-                        <li><a class="dropdown-item" href="@Url.Action("XacNhanDon", "HoaDons")">Xác nhận Đơn hàng</a></li>
-                        <li><a class="dropdown-item" href="@Url.Action("HoaDon", "HoaDons")">Quản lý Hóa đơn</a></li> <!-- Thêm dòng này -->
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="@Url.Action("Logout", "DangNhap")">Đăng xuất</a></li>
                     </ul>
@@ -181,6 +172,11 @@
                     <li class="nav-item p-3">
                         <a class="nav-link" href="@Url.Action("HoaDon", "HoaDons")">
                             <i class="fas fa-file-invoice p-2"></i> Quản lý Hóa đơn
+                        </a>
+                    </li>
+                    <li class="nav-item p-3">
+                        <a class="nav-link" href="@Url.Action("ThemHoaDonMoi", "HoaDons")">
+                            <i class="fas fa-file-invoice p-2"></i> Thanh Toán Trực Tiếp 
                         </a>
                     </li>
                 </ul>

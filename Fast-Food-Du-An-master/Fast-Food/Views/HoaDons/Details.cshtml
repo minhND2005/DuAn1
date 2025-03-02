@@ -42,7 +42,7 @@
     </div>
 </div>
 @{
-    decimal tongTienTatCa = 30000;
+   
 }
 <h4 class="mb-4">Chi Tiết Sản Phẩm Trong Hóa Đơn</h4>
 <table class="table table-striped table-bordered">
@@ -59,7 +59,7 @@
         {
             var giaMonAn = ct.MaMonNavigation.Gia;
             decimal tongTienMon = giaMonAn * ct.SoLuong ?? 0;
-            tongTienTatCa += tongTienMon;
+           
 
             // Cộng dồn vào tổng tiền hóa đơn
            
@@ -72,13 +72,12 @@
         }
     </tbody>
     <tfoot>
-        <tr>
-            <th colspan="3" class="text-right">Tiền ship:</th>
-            <th class="text-center">30.000đ</th>
-        </tr>
+      
         <tr>
             <th colspan="3" class="text-right">Tổng Tiền Tất Cả:</th>
-            <th class="text-center">@tongTienTatCa.ToString("N0") VNĐ</th>
+            <th class="text-center">
+                @(Model.TongTien.HasValue ? Model.TongTien.Value.ToString("N0") : "0") VNĐ
+            </th>
         </tr>
     </tfoot>
 </table>

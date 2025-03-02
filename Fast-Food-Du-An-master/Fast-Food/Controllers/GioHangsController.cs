@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fast_Food.Models;
-using System.Security.Claims;
 
 namespace Fast_Food.Controllers
 {
@@ -313,7 +312,71 @@ namespace Fast_Food.Controllers
             return _context.GioHangs.Any(e => e.MaGioHang == id);
         }
 
-       
-        
+        public IActionResult EditKhachHang()
+        {
+            // Lấy MaKhachHang từ Session
+            var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
+
+            // Kiểm tra nếu không có MaKhachHang thì quay lại trang Login
+            if (maKhachHang == null)
+            {
+                return RedirectToAction("Login", "DangNhap");
+            }
+
+            // Chuyển MaKhachHang từ string sang int
+            int maKhachHangInt = int.Parse(maKhachHang);
+
+            // Tìm khách hàng theo MaKhachHang
+            var khachHang = _context.KhachHangs
+                                    .FirstOrDefault(kh => kh.MaKhachHang == maKhachHangInt);
+
+            // Nếu không tìm thấy, quay về Index
+            if (khachHang == null)
+            {
+                TempData["Error2"] = "Không tìm thấy thông tin khách hàng!";
+                return RedirectToAction("Index");
+            }
+
+            return View(khachHang);
+        }
+
+        [HttpPost]
+        public IActionResult EditKhachHang(KhachHang khachHang)
+        {
+            // Lấy MaKhachHang từ Session
+            var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
+
+            if (maKhachHang == null)
+            {
+                return RedirectToAction("Login", "DangNhap");
+            }
+
+            // Chuyển MaKhachHang từ string sang int
+            int maKhachHangInt = int.Parse(maKhachHang);
+
+            // Tìm KhachHang theo MaKhachHang từ Session
+            var khachHangDb = _context.KhachHangs
+                                     .FirstOrDefault(kh => kh.MaKhachHang == maKhachHangInt);
+
+            // Nếu tìm thấy, cập nhật thông tin
+            if (khachHangDb != null)
+            {
+                khachHangDb.TenKhachHang = khachHang.TenKhachHang;
+                khachHangDb.SoDienThoai = khachHang.SoDienThoai;
+                khachHangDb.DiaChi = khachHang.DiaChi;
+
+                _context.KhachHangs.Update(khachHangDb);
+                _context.SaveChanges();
+
+                TempData["Success"] = "Cập nhật thông tin thành công!";
+            }
+            else
+            {
+                TempData["Error2"] = "Không tìm thấy thông tin khách hàng!";
+            }
+
+            return RedirectToAction("Index");
+        }
+
     }
 }

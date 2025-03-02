@@ -28,12 +28,6 @@ namespace Fast_Food.Controllers
             // Truy vấn dữ liệu từ database
             IQueryable<MonAn> monAnQuery = _context.MonAns;
 
-            // Lọc theo Loại Sản Phẩm
-            if (!string.IsNullOrEmpty(LoaiSanPham))
-            {
-                monAnQuery = monAnQuery.Where(m => m.LoaiSanPham == LoaiSanPham);
-            }
-
             // Lọc theo từ khóa tìm kiếm (tìm trong tên món ăn)
             if (!string.IsNullOrEmpty(TimKiem))
             {
@@ -250,16 +244,16 @@ namespace Fast_Food.Controllers
             {
                 ModelState.AddModelError("LoaiSanPham", "Vui lòng chọn loại món ăn hợp lệ.");
                 ViewBag.LoaiSanPhamList = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = "0", Text = "---Lựa Chọn Món Ăn---" },
-                        new SelectListItem { Value = "1", Text = "Gà" },
-                        new SelectListItem { Value = "2", Text = "Kem" },
-                        new SelectListItem { Value = "3", Text = "Burger" },
-                        new SelectListItem { Value = "4", Text = "Pizza" },
-                        new SelectListItem { Value = "5", Text = "Khoai" },
-                        new SelectListItem { Value = "6", Text = "Đồ Uống" },
-                        new SelectListItem { Value = "7", Text = "Combo" }
-                    };
+             {
+                 new SelectListItem { Value = "0", Text = "---Lựa Chọn Món Ăn---" },
+                 new SelectListItem { Value = "1", Text = "Gà" },
+                 new SelectListItem { Value = "2", Text = "Kem" },
+                 new SelectListItem { Value = "3", Text = "Burger" },
+                 new SelectListItem { Value = "4", Text = "Pizza" },
+                 new SelectListItem { Value = "5", Text = "Khoai" },
+                 new SelectListItem { Value = "6", Text = "Đồ Uống" },
+                 new SelectListItem { Value = "7", Text = "Combo" }
+             };
                 return View(monAn);
             }
 
@@ -267,16 +261,16 @@ namespace Fast_Food.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.LoaiSanPhamList = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = "0", Text = "---Lựa Chọn Món Ăn---" },
-                        new SelectListItem { Value = "1", Text = "Gà" },
-                        new SelectListItem { Value = "2", Text = "Kem" },
-                        new SelectListItem { Value = "3", Text = "Burger" },
-                        new SelectListItem { Value = "4", Text = "Pizza" },
-                        new SelectListItem { Value = "5", Text = "Khoai" },
-                        new SelectListItem { Value = "6", Text = "Đồ Uống" },
-                        new SelectListItem { Value = "7", Text = "Combo" }
-                    };
+             {
+                 new SelectListItem { Value = "0", Text = "---Lựa Chọn Món Ăn---" },
+                 new SelectListItem { Value = "1", Text = "Gà" },
+                 new SelectListItem { Value = "2", Text = "Kem" },
+                 new SelectListItem { Value = "3", Text = "Burger" },
+                 new SelectListItem { Value = "4", Text = "Pizza" },
+                 new SelectListItem { Value = "5", Text = "Khoai" },
+                 new SelectListItem { Value = "6", Text = "Đồ Uống" },
+                 new SelectListItem { Value = "7", Text = "Combo" }
+             };
                 return View(monAn);
             }
 
@@ -298,7 +292,11 @@ namespace Fast_Food.Controllers
                     await HinhAnh.CopyToAsync(stream);// Copy file
                 }
 
-                monAn.HinhAnh = $"img/monan/{fileName}";// Lưu đường dẫn file vào database
+                // Sử dụng Path.Combine nhưng thay bằng cách nối chuỗi thủ công
+                monAn.HinhAnh = "img/monan/" + fileName;
+
+
+
             }
 
             monAn.NgayTao = DateOnly.FromDateTime(DateTime.Now);// Lưu ngày tạo
@@ -330,7 +328,7 @@ namespace Fast_Food.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MaMon,LoaiSanPham,TenMon,Gia,SoLuong,TrangThai,NgayTao,NgayCapNhat,ChiTietFood,HinhAnh")] MonAn monAn)
+        public async Task<IActionResult> Edit(int id, [Bind("MaMon,LoaiSanPham,TenMon,Gia,SoLuong,TrangThai,NgayTao,NgayCapNhat,ChiTietFood,HinhAnh")] MonAn monAn, IFormFile file)
         {
             if (id != monAn.MaMon)
             {
@@ -341,7 +339,54 @@ namespace Fast_Food.Controllers
             {
                 try
                 {
-                    _context.Update(monAn);
+                    // Lấy món ăn cũ từ DB
+                    var monAnCu = await _context.MonAns.FirstOrDefaultAsync(m => m.MaMon == id);
+                    if (monAnCu == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Cập nhật thông tin cơ bản
+                    monAnCu.TenMon = monAn.TenMon;
+                    monAnCu.SoLuong = monAn.SoLuong;
+                    monAnCu.Gia = monAn.Gia;
+                    monAnCu.ChiTietFood = monAn.ChiTietFood;
+                    monAnCu.TrangThai = monAn.TrangThai;
+                    monAnCu.LoaiSanPham = monAn.LoaiSanPham;
+                    monAnCu.NgayCapNhat = DateOnly.FromDateTime(DateTime.Now);
+
+                    // Nếu có upload file mới
+                    if (file != null && file.Length > 0)
+                    {
+                        // Tạo tên file mới để tránh trùng (thêm timestamp)
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                        string extension = Path.GetExtension(file.FileName);
+                        string newFileName = $"{fileName}_{DateTime.Now:yyyyMMddHHmmss}{extension}";
+
+                        // Định nghĩa đường dẫn lưu file
+                        string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/monan");
+                        if (!Directory.Exists(folderPath))
+                        {
+                            Directory.CreateDirectory(folderPath); // Tạo thư mục nếu chưa tồn tại
+                        }
+                        string filePath = Path.Combine(folderPath, newFileName);
+
+                        // Lưu file vào thư mục wwwroot/img/monan
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        // Cập nhật lại đường dẫn ảnh trong database
+                        monAnCu.HinhAnh = Path.Combine("img/monan/", newFileName);
+
+                    }
+                    else
+                    {
+                        // Nếu không upload ảnh mới, giữ nguyên ảnh cũ
+                        monAn.HinhAnh = monAnCu.HinhAnh;
+                    }
+                    _context.Update(monAnCu);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -359,6 +404,8 @@ namespace Fast_Food.Controllers
             }
             return View(monAn);
         }
+
+
 
         // GET: MonAns/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -378,11 +425,20 @@ namespace Fast_Food.Controllers
             return View(monAn);
         }
 
-        // POST: MonAns/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Tìm tất cả các bản ghi liên quan trong chiTietHoaDon
+            var chiTietHoaDonList = _context.ChiTietHoaDons.Where(c => c.MaMon == id).ToList();
+
+            // Xóa tất cả các bản ghi trong chiTietHoaDon trước
+            if (chiTietHoaDonList.Any())
+            {
+                _context.ChiTietHoaDons.RemoveRange(chiTietHoaDonList);
+            }
+
+            // Xóa MonAn sau khi đã xóa chi tiết hóa đơn
             var monAn = await _context.MonAns.FindAsync(id);
             if (monAn != null)
             {
@@ -390,8 +446,9 @@ namespace Fast_Food.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("QuanLySanPham");
         }
+
         public async Task<IActionResult> QuanLySanPham(string TimKiem)
         {
             var monAns = _context.MonAns.AsQueryable();

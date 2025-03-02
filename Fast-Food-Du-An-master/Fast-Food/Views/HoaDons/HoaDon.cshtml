@@ -84,11 +84,10 @@
                         </span>
                     </td>
 
+
                     <!-- Tổng Tiền -->
-                    <td class="fw-bold text-danger">@($"{(item.TongTien + 30000):N0}") VNĐ</td>
+                    <td class="fw-bold text-danger">@($"{(item.TongTien):N0}") VNĐ</td>
 
-
-                  
                     <td>
                         @if (item.TrangThaiDonHang == "Chờ xác nhận" || item.TrangThaiDonHang == "Đang chuẩn bị" || item.TrangThaiDonHang == "Đã hủy" ||
                        item.TrangThaiDonHang == "Đang giao hàng" || item.TrangThaiDonHang == "Đã thanh toán")

@@ -77,13 +77,9 @@ namespace Fast_Food.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaKhachHang,TenKhachHang,GioiTinh,SoDienThoai,NgaySinh,Email,DiaChi,Avatar")] KhachHang khachHang)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(khachHang);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(khachHang);
+           _context.KhachHangs.Add(khachHang);
+            _context.SaveChanges();
+            return RedirectToAction("ThemHoaDonMoi", "HoaDons");
         }
 
         // GET: KhachHangs/Edit/5

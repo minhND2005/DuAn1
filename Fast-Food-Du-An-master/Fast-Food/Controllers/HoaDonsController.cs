@@ -436,6 +436,99 @@ namespace Fast_Food.Controllers
 
             return RedirectToAction("XacNhanDon");
         }
-      
+        [HttpGet]
+        public IActionResult ThemHoaDonMoi(string TimKiem)
+        {
+            var danhSachMonAn = _context.MonAns.AsNoTracking().ToList();
+
+            // Nếu có từ khóa tìm kiếm, thì lọc danh sách món ăn
+            if (!string.IsNullOrEmpty(TimKiem))
+            {
+                danhSachMonAn = danhSachMonAn
+                    .Where(x => x.TenMon.Contains(TimKiem, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            var danhSachKhachHang = _context.KhachHangs.AsNoTracking().ToList();
+
+            var viewModel = new HoaDonViewModels
+            {
+                DanhSachMonAn = danhSachMonAn,
+                DanhSachKhachHang = danhSachKhachHang
+            };
+
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
+        public IActionResult ThemHoaDonMoi(HoaDonViewModels model)
+        {
+            if (model.MaKhachHang == 0 || model.ChiTietHoaDon == null || !model.ChiTietHoaDon.Any(x => x.SoLuong > 0))//nếu ko chọn khách hàng hoặc chưa chọn món ăn thì thông báo lỗi
+            {
+                ModelState.AddModelError("", "Vui lòng chọn khách hàng và thêm món vào giỏ!");
+                return View(model);
+            }
+            //tính tổng tiền của hóa đơn số lượng nhân với giá của món ăn
+            decimal tongTien = model.ChiTietHoaDon
+                                    .Where(x => x.SoLuong > 0)
+                                    .Sum(x => x.SoLuong * x.Gia);
+
+            var khachHang = _context.KhachHangs.FirstOrDefault(k => k.MaKhachHang == model.MaKhachHang);//list khách hàng
+            if (khachHang == null)
+            {
+                ModelState.AddModelError("", "Khách hàng không tồn tại!");//ko có thì hiện thông báo
+                return View(model);
+            }
+
+            var hoaDon = new HoaDon//tao hóa đơn mới 
+            {
+                MaKhachHang = model.MaKhachHang,
+                ThoiGianDat = DateTime.Now,
+                ThoiGianKetThuc = DateTime.Now,
+                TrangThaiDonHang = "Hoàn Thành",
+                TongTien = tongTien,
+                SdtlienHe = "Đơn Trực Tuyến",
+                DiaChiGiaoHang = "Đơn Mua Ở Cửa Hàng",
+                TrangThaiThanhToan = "Đã Thanh Toán"
+            };
+
+            _context.HoaDons.Add(hoaDon);//thêm hóa đơn vào db
+            _context.SaveChanges();//lưu thay đổi
+
+            foreach (var item in model.ChiTietHoaDon)
+            {
+                if (item.SoLuong > 0)//diều kiện bắt buộc số lượng phải lớn hơn 0
+                {
+                    var monAn = _context.MonAns.FirstOrDefault(m => m.MaMon == item.MaMonAn);//list món ăn
+                    if (monAn != null)
+                    {
+                        if (monAn.SoLuong < item.SoLuong) //kiểm tra số lượng món ăn trong kho 
+                        {
+                            ModelState.AddModelError("", $"Món {monAn.TenMon} không đủ số lượng!");//nếu số lượng mua vựot quá số lượng trong kho thì thông báo lỗi
+                            return View(model);
+                        }
+
+                        monAn.SoLuong -= item.SoLuong; //Trừ số lượng món ăn trong kho
+                    }
+
+                    var chiTiet = new ChiTietHoaDon //thêm món ăn vào chi tiết hóa đơn
+                    {
+                        MaHoaDon = hoaDon.MaHoaDon,
+                        MaMon = item.MaMonAn,
+                        SoLuong = item.SoLuong,
+                        Gia = item.Gia,
+                        TongTien = item.SoLuong * item.Gia
+                    };
+
+                    _context.ChiTietHoaDons.Add(chiTiet);//thêm chi tiết hóa đơn vào db
+                }
+            }
+
+            _context.SaveChanges();//lưu thay đổi
+
+            TempData["SuccessMessage"] = "Hóa đơn đã được tạo thành công! Mã hóa đơn: " + hoaDon.MaHoaDon;
+            return RedirectToAction("ThemHoaDonMoi");
+        }
     }
 }

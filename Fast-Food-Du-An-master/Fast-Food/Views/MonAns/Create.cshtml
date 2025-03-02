@@ -47,15 +47,19 @@
 
             <div class="form-group">
                 <label asp-for="TrangThai" class="control-label"></label>
-                <input asp-for="TrangThai" class="form-control" />
+                <select asp-for="TrangThai" class="form-control">
+                    <option value="true" selected>Còn hàng</option>
+                    <option value="false">Hết hàng</option>
+                </select>
                 <span asp-validation-for="TrangThai" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="HinhAnh" class="control-label"></label>
-                <input type="file" asp-for="HinhAnh" class="form-control" />
+                <label asp-for="HinhAnh" class="control-label">Chọn Hình Ảnh</label>
+                <input type="file" name="HinhAnh" class="form-control" accept="image/*" />
                 <span asp-validation-for="HinhAnh" class="text-danger"></span>
             </div>
+
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
