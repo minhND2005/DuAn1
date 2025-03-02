@@ -4,54 +4,44 @@
 }
 @if (ViewData["SuccessMessage"] != null)
 {
-    <div class="alert alert-info">
+    <div class="alert alert-info text-center">
         @ViewData["SuccessMessage"]
     </div>
 }
 
-<table class="table table-bordered text-center">
-    <thead class="table-dark">
-        <tr>
-            <th>Mã Hóa Đơn</th>
-            <th>Khách Hàng</th>
-            <th>Thời Gian Đặt</th>
-            <th>Tổng Tiền</th>
-            <th>Trạng Thái</th>
-            <th>Hành Động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.MaHoaDon</td>
-                <td>@item.MaKhachHangNavigation.TenKhachHang</td>
-                <td>@item.ThoiGianDat</td>
-                <td>@($"{(item.TongTien):N0}") VNĐ</td>
-
-                <td><span class="badge bg-warning text-dark">@item.TrangThaiDonHang</span></td>
-                <td>
+<h2 class="text-center">📜 Danh sách hóa đơn</h2>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3 shadow">
+                <div class="card-header text-white bg-dark text-center">Mã Hóa Đơn: @item.MaHoaDon</div>
+                <div class="card-body">
+                    <h5 class="card-title">Khách Hàng: @item.MaKhachHangNavigation.TenKhachHang</h5>
+                    <p class="card-text">🕒 Thời Gian Đặt: @item.ThoiGianDat</p>
+                    <p class="card-text">💰 Tổng Tiền: <strong>@($"{(item.TongTien):N0}") VNĐ</strong></p>
+                    <p class="card-text">
+                        <span class="badge bg-warning text-dark">@item.TrangThaiDonHang</span>
+                    </p>
                     @if (item.TrangThaiDonHang == "Chờ xác nhận")
                     {
-                        <form asp-action="XacNhan" method="post">
+                        <form asp-action="XacNhan" method="post" class="d-inline">
                             <input type="hidden" name="id" value="@item.MaHoaDon" />
-                            <button type="submit" class="btn btn-success"
+                            <button type="submit" class="btn btn-success btn-sm"
                                     onclick="return confirm('Bạn có chắc muốn xác nhận đơn hàng này không?');">
                                 ✅ Xác nhận
                             </button>
-
                         </form>
-                        <form asp-action="HuyDonHang" method="post">
+                        <form asp-action="HuyDonHang" method="post" class="d-inline">
                             <input type="hidden" name="id" value="@item.MaHoaDon" />
-                            <button type="submit" class="btn btn-danger"
+                            <button type="submit" class="btn btn-danger btn-sm"
                                     onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
-                                ✖️Hủy Đơn
+                                ✖️ Hủy Đơn
                             </button>
-
                         </form>
                     }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -26,11 +26,8 @@
                             <td>@kh.Email</td>
                             <td>@kh.SoDienThoai</td>
                             <td>
-                                <a href="@Url.Action("Edit", "KhachHangs", new { id = kh.MaKhachHang })" class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Sửa
-                                </a>
-                                <a href="@Url.Action("Delete", "KhachHangs", new { id = kh.MaKhachHang })" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa khách hàng này?');">
-                                    <i class="fas fa-trash-alt"></i> Xóa
+                                <a href="@Url.Action("Details", "KhachHangs", new { id = kh.MaKhachHang })" class="btn btn-primary btn-sm">
+                                    📜Xem Chi Tiết
                                 </a>
                             </td>
                         </tr>

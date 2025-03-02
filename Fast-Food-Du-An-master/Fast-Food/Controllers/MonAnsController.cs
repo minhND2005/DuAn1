@@ -34,14 +34,20 @@ namespace Fast_Food.Controllers
                 monAnQuery = monAnQuery.Where(m => m.TenMon.ToLower().Contains(TimKiem.ToLower()));
             }
 
+            // Lọc theo loại sản phẩm
+            if (!string.IsNullOrEmpty(LoaiSanPham))
+            {
+                monAnQuery = monAnQuery.Where(m => m.LoaiSanPham == LoaiSanPham);
+            }
+
             // Tổng số bản ghi sau khi lọc
             int recsCount = await monAnQuery.CountAsync();
 
             // Tính toán phân trang
             var pager = new demdanhsach(recsCount, pg, pageSize);
-                ViewBag.Pager = pager;
-                ViewBag.LoaiSanPham = LoaiSanPham;
-                ViewBag.TimKiem = TimKiem;
+            ViewBag.Pager = pager;
+            ViewBag.LoaiSanPham = LoaiSanPham;
+            ViewBag.TimKiem = TimKiem;
 
             // Lấy dữ liệu cho trang hiện tại
             var products = await monAnQuery
@@ -51,6 +57,7 @@ namespace Fast_Food.Controllers
 
             return View(products);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddToCart(int id, string soluong)
         {
@@ -377,10 +384,13 @@ namespace Fast_Food.Controllers
                             await file.CopyToAsync(stream);
                         }
 
-                        // Cập nhật lại đường dẫn ảnh trong database
+                        // Cập nhật đường dẫn ảnh mới
                         monAnCu.HinhAnh = Path.Combine("img/monan/", newFileName);
-
                     }
+
+                    // Không gán lại `monAn.HinhAnh` nếu không có ảnh mới
+                    // Vì `monAn` chỉ là đối tượng từ form, không phải đối tượng theo dõi của Entity Framework
+
                     else
                     {
                         // Nếu không upload ảnh mới, giữ nguyên ảnh cũ

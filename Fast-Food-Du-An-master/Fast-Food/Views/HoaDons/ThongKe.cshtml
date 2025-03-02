@@ -1,22 +1,17 @@
 ﻿@model List<Fast_Food.Models.ThongKeViewModel>
 
 <h2 class="text-center">📊 Thống kê đơn hàng</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Trạng thái</th>
-            <th>Số Đơn Hàng</th>
-            <th>Tổng tiền</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.TrangThai</td>
-                <td>@item.SoDonHang</td>
-                <td>@item.TongTien.GetValueOrDefault().ToString("N0") VND</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <div class="card text-white mb-3" style="background-color: #343a40;">
+                <div class="card-header text-center">@item.TrangThai</div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Số Đơn Hàng: @item.SoDonHang</h5>
+                    <p class="card-text">Tổng tiền: @item.TongTien.GetValueOrDefault().ToString("N0") VND</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
