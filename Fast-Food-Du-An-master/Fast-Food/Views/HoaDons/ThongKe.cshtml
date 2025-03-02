@@ -5,6 +5,7 @@
     <thead>
         <tr>
             <th>Trạng thái</th>
+            <th>Số Đơn Hàng</th>
             <th>Tổng tiền</th>
         </tr>
     </thead>
@@ -13,6 +14,7 @@
         {
             <tr>
                 <td>@item.TrangThai</td>
+                <td>@item.SoDonHang</td>
                 <td>@item.TongTien.GetValueOrDefault().ToString("N0") VND</td>
             </tr>
         }

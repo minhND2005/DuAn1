@@ -4,25 +4,26 @@
     ViewData["Title"] = "Giỏ Hàng";
 }
 
-<h1>Giỏ Hàng</h1>
+<h1 class="text-center mb-4">🛒 Giỏ Hàng</h1>
 
 @if (TempData["Error2"] != null)
 {
-    <div class="alert alert-danger">
+    <div class="alert alert-danger text-center">
         @TempData["Error2"]
     </div>
 }
 
-<table class="table">
-    <thead>
+<table class="table table-bordered table-hover text-center align-middle">
+    <thead class="table-dark">
         <tr>
+            <th>Hình Ảnh</th>
             <th>Tên Sản Phẩm</th>
             <th>Giá Bán</th>
-            <th>Hình Ảnh</th>
+
             <th>Tạm Tính</th>
             <th>Số Lượng</th>
             <th>Ghi Chú</th>
-            <th>Mã Sản Phẩm</th>
+          
             <th>Hành Động</th>
         </tr>
     </thead>
@@ -30,41 +31,34 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.MaGioHang" class="text-decoration-none">
+                <td class="align-middle">
+                    <img src="@item.MaMonNavigation.HinhAnh" alt="Hình ảnh" class="rounded" style="width: 180px; height: 180px; object-fit: cover;" />
+                </td>
+                <td class="align-middle">
+                    <a asp-action="Details" asp-route-id="@item.MaGioHang" class="text-decoration-none fw-bold">
                         @item.MaMonNavigation.TenMon
                     </a>
                 </td>
-                <td>
+                <td class="text-success fw-bold align-middle">
                     @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} đ", item.MaMonNavigation.Gia)
                 </td>
-
-                <td>
-                    <img src="@item.MaMonNavigation.HinhAnh" alt="Hình ảnh" style="width: 100px; height: 100px;" />
+             
+                <td class="text-primary fw-bold align-middle">
+                    @String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} đ", item.Gia)
                 </td>
-                <td>@String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0} đ", item.Gia)</td>
-                <td>
-                    <form method="post" asp-action="CapNhatSoLuong">
+                <td class="align-middle">
+                    <form method="post" asp-action="CapNhatSoLuong" class="d-flex justify-content-center">
                         <input type="hidden" name="id" value="@item.MaGioHang" />
-                        <input type="number" name="soLuong" value="@item.SoLuong" min="1" class="form-control" style="width: 70px; display: inline-block;" />
-                        <button type="submit" class="btn btn-success">Cập nhật</button>
+                        <input type="number" name="soLuong" value="@item.SoLuong" min="1" class="form-control text-center" style="width: 60px;" />
+                        <button type="submit" class="btn btn-success ms-2">🔄</button>
                     </form>
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.GhiChu)</td>
-                <td>
-                    @if (item.MaCombo != null)
-                    {
-                        @Html.DisplayFor(modelItem => item.MaComboNavigation.MaMon)
-                    }
-                    else
-                    {
-                        @Html.DisplayFor(modelItem => item.MaMonNavigation.MaMon)
-                    }
-                </td>
-                <td>
-                    <form action="/GioHangs/Delete" method="post">
+                <td class="align-middle">@Html.DisplayFor(modelItem => item.GhiChu)</td>
+             
+                <td class="align-middle">
+                    <form action="/GioHangs/Delete" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?');">
                         <input type="hidden" name="id" value="@item.MaGioHang" />
-                        <button type="submit" class="btn btn-danger">Xóa</button>
+                        <button type="submit" class="btn btn-danger">🗑️</button>
                     </form>
                 </td>
             </tr>
@@ -72,16 +66,16 @@
     </tbody>
 </table>
 
-<h4>
+<h4 class="text-end mt-3 fw-bold">
     Tổng tiền:
-    <span class="text-danger">
+    <span class="text-danger fs-4">
         @((ViewData["TotalPrice"] != null) ? ((decimal)ViewData["TotalPrice"]).ToString("N0", new System.Globalization.CultureInfo("vi-VN")) + " ₫" : "0 ₫")
     </span>
 </h4>
 
-<form method="post" asp-action="MuaSanPham">
-    <button type="submit" class="btn btn-primary">Mua</button>
-</form>
-
-
-<a class="btn btn-warning" href="@Url.Action("EditKhachHang", "GioHangs")">Đặt hàng</a>
+<div class="d-flex justify-content-end mt-3">
+    <form method="post" asp-action="MuaSanPham">
+        <button type="submit" class="btn btn-primary me-2">🛒 Mua ngay</button>
+    </form>
+    <a class="btn btn-warning" href="@Url.Action("EditKhachHang", "GioHangs")">📦 Đặt hàng</a>
+</div>

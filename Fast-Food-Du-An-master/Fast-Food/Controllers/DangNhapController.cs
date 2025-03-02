@@ -52,7 +52,7 @@ namespace Fast_Food.Controllers
                 HttpContext.Session.SetString("TenNhanVien", taikhoan.TenTk);
                 HttpContext.Session.SetString("Avatar", taikhoan.MaNhanVienNavigation?.Avatar ?? defaultAvatar);
 
-                return RedirectToAction("QuanLySanPham", "MonAns");
+                return RedirectToAction("XacNhanDon", "HoaDons");
             }
             else if (taikhoan.LoaiTaiKhoan == "KhachHang")
             {

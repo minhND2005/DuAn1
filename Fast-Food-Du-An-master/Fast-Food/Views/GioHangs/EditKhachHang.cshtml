@@ -4,43 +4,46 @@
     ViewData["Title"] = "EditKhachHang";
 }
 
-<h1>Thông tin nhận hàng</h1>
+<div class="container mt-4 p-4 shadow-lg rounded bg-light">
+    <h2 class="text-center text-primary">📦 Thông tin nhận hàng</h2>
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="EditKhachHang" class="p-3">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="MaKhachHang" />
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="EditKhachHang">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MaKhachHang" />
-            <div class="form-group">
-                <label>Tên khách hàng</label>
-                <input asp-for="TenKhachHang" class="form-control" />
-                <span asp-validation-for="TenKhachHang" class="text-danger"></span>
-            </div>
-          
-            <div class="form-group">
-                <label>Số điện thoại</label>
-                <input asp-for="SoDienThoai" class="form-control" />
-                <span asp-validation-for="SoDienThoai" class="text-danger"></span>
-            </div>
-           
-            <div class="form-group">
-                <label>Địa chỉ nhận hàng</label>
-                <input asp-for="DiaChi" class="form-control" />
-                <span asp-validation-for="DiaChi" class="text-danger"></span>
-            </div>
-           
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">👤 Tên khách hàng</label>
+                    <input asp-for="TenKhachHang" class="form-control border-primary shadow-sm" />
+                    <span asp-validation-for="TenKhachHang" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">📞 Số điện thoại</label>
+                    <input asp-for="SoDienThoai" class="form-control border-primary shadow-sm" />
+                    <span asp-validation-for="SoDienThoai" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">🏠 Địa chỉ nhận hàng</label>
+                    <input asp-for="DiaChi" class="form-control border-primary shadow-sm" />
+                    <span asp-validation-for="DiaChi" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-success px-4 shadow-sm">💾 Lưu thông tin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="text-center mt-3">
+        <a asp-action="Index" class="btn btn-outline-secondary shadow-sm">⬅ Quay lại</a>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -343,6 +343,7 @@ namespace Fast_Food.Controllers
                 .Select(g => new ThongKeViewModel
                 {
                     TrangThai = g.Key,
+                    SoDonHang = g.Count(),
                     TongTien = g.Sum(hd => hd.TongTien) ?? 0 // Tránh lỗi null
                 })
                 .ToList();
