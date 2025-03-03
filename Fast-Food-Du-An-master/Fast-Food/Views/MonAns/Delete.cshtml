@@ -11,44 +11,46 @@
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header bg-danger text-white">
-            <h5 class="card-title mb-0">MonAn Details</h5>
+            <h5 class="card-title mb-0">@Model.TenMon</h5>
         </div>
         <div class="card-body">
             <dl class="row">
-                <dt class="col-sm-3">LoaiSanPham</dt>
+                <dt class="col-sm-3">Loại Sản Phẩm</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.LoaiSanPham)</dd>
 
-                <dt class="col-sm-3">TenMon</dt>
+                <dt class="col-sm-3">Tên Món</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.TenMon)</dd>
 
-                <dt class="col-sm-3">Gia</dt>
+                <dt class="col-sm-3">Giá</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.Gia)</dd>
 
-                <dt class="col-sm-3">SoLuong</dt>
+                <dt class="col-sm-3">Số Lượng </dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.SoLuong)</dd>
 
-                <dt class="col-sm-3">TrangThai</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.TrangThai)</dd>
+                <dt class="col-sm-3">Trạng Thái </dt>
+                <dd class="col-sm-9">
+                    @(Model.TrangThai.HasValue ? (Model.TrangThai.Value ? "Còn hàng" : "Hết hàng") : "Không xác định")
+                </dd>
 
-                <dt class="col-sm-3">NgayTao</dt>
+                <dt class="col-sm-3">Ngày Tạo</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.NgayTao)</dd>
 
-                <dt class="col-sm-3">NgayCapNhat</dt>
+                <dt class="col-sm-3">Ngày Cập Nhật</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.NgayCapNhat)</dd>
 
-                <dt class="col-sm-3">ChiTietFood</dt>
+                <dt class="col-sm-3">Chi Tiết Món Ăn </dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.ChiTietFood)</dd>
 
-                <dt class="col-sm-3">HinhAnh</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.HinhAnh)</dd>
+                <dt class="col-sm-3">HÌnh Ảnh</dt>
+                <img src="~/@Model.HinhAnh" alt="Ảnh hiện tại" style="width: 200px; height: auto; margin-top: 10px;" />
             </dl>
         </div>
         <div class="card-footer text-center">
             <form asp-action="Delete" class="d-inline">
                 <input type="hidden" asp-for="MaMon" />
-                <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+                <button type="submit" class="btn btn-danger btn-lg">Xóa Sản Phẩm</button>
             </form>
-            <a asp-action="QuanLySanPham" class="btn btn-secondary btn-lg">Back to List</a>
+            <a asp-action="QuanLySanPham" class="btn btn-secondary btn-lg">Quay Lại</a>
         </div>
 
     </div>
