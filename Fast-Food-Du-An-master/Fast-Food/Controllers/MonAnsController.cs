@@ -388,8 +388,7 @@ namespace Fast_Food.Controllers
                         monAnCu.HinhAnh = Path.Combine("img/monan/", newFileName);
                     }
 
-                    // Không gán lại `monAn.HinhAnh` nếu không có ảnh mới
-                    // Vì `monAn` chỉ là đối tượng từ form, không phải đối tượng theo dõi của Entity Framework
+                   
 
                     else
                     {

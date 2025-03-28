@@ -412,7 +412,7 @@ namespace Fast_Food.Controllers
                     hoaDon.TrangThaiThanhToan = "Đã hủy";
                     hoaDon.ThoiGianKetThuc = DateTime.Now;
 
-                    // Hoàn lại số lượng món ăn
+                    //Hoàn lại số lượng món ăn
                     foreach (var chiTiet in hoaDon.ChiTietHoaDons)
                     {
                         var monAn = _context.MonAns.Find(chiTiet.MaMon);
@@ -424,6 +424,7 @@ namespace Fast_Food.Controllers
                     }
 
                     _context.SaveChanges();
+
                     transaction.Commit();
 
                     TempData["SuccessMessage"] = "Đơn hàng đã được hủy thành công!";
@@ -482,17 +483,17 @@ namespace Fast_Food.Controllers
                 return View(model);
             }
 
-            var hoaDon = new HoaDon//tao hóa đơn mới 
-            {
-                MaKhachHang = model.MaKhachHang,
-                ThoiGianDat = DateTime.Now,
-                ThoiGianKetThuc = DateTime.Now,
-                TrangThaiDonHang = "Hoàn Thành",
-                TongTien = tongTien,
-                SdtlienHe = "Đơn Trực Tuyến",
-                DiaChiGiaoHang = "Đơn Mua Ở Cửa Hàng",
-                TrangThaiThanhToan = "Đã Thanh Toán"
-            };
+                var hoaDon = new HoaDon//tao hóa đơn mới 
+                {
+                    MaKhachHang = model.MaKhachHang,
+                    ThoiGianDat = DateTime.Now,
+                    ThoiGianKetThuc = DateTime.Now,
+                    TrangThaiDonHang = "Hoàn Thành",
+                    TongTien = tongTien,
+                    SdtlienHe = "Đơn Trực Tiếp",
+                    DiaChiGiaoHang = "Đơn Mua Ở Cửa Hàng",
+                    TrangThaiThanhToan = "Đã Thanh Toán"
+                };
 
             _context.HoaDons.Add(hoaDon);//thêm hóa đơn vào db
             _context.SaveChanges();//lưu thay đổi
